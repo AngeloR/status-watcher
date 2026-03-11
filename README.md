@@ -2,6 +2,8 @@
 
 `status-watcher` is a terminal dashboard for monitoring public service status feeds and status pages. It turns Atom/RSS history feeds into a live retro-cyber console and includes a basic adapter model for expanding beyond feeds over time.
 
+![Status Watcher screenshot](docs/screenshot.png)
+
 ## Features
 
 - Rich terminal UI with keyboard navigation and auto-refresh
