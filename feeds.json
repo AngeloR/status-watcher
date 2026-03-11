@@ -6,5 +6,9 @@
     {
         "name": "OpenAI",
         "url": "https://status.openai.com/feed.atom"
+    },
+    {
+        "name": "GCP",
+        "url": "https://status.cloud.google.com/en/feed.atom"
     }
 ]
