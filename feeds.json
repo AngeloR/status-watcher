@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Claude",
+        "url": "https://status.claude.com/history.atom"
+    },
+    {
+        "name": "OpenAI",
+        "url": "https://status.openai.com/feed.atom"
+    }
+]
