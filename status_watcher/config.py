@@ -1,0 +1,63 @@
+from __future__ import annotations
+
+import json
+import os
+
+from typing import Any, Dict, List, Optional, Sequence
+
+from status_watcher.models import SourceSpec
+
+
+DEFAULT_SOURCE_SPECS = [
+    SourceSpec(
+        name="Claude",
+        type="feed",
+        url="https://status.claude.com/history.atom",
+    ),
+]
+
+REFRESH_SECONDS = 120
+HTTP_TIMEOUT_SECONDS = 15
+USER_AGENT = "status-dashboard/2.0 (+rich terminal monitor)"
+MAX_ENTRIES_PER_FEED = 30
+DEFAULT_FEEDS_PATH = "feeds.json"
+
+
+def load_source_specs_from_file(path: str) -> List[SourceSpec]:
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if not isinstance(data, list):
+        raise ValueError("Feed config must be a JSON array")
+
+    specs: List[SourceSpec] = []
+    for item in data:
+        if not isinstance(item, dict) or "name" not in item or "url" not in item:
+            raise ValueError("Each feed must contain 'name' and 'url'")
+
+        source_type = str(item.get("type", "feed"))
+        options: Dict[str, Any] = {}
+        for key, value in item.items():
+            if key not in {"name", "type", "url"}:
+                options[key] = value
+
+        specs.append(
+            SourceSpec(
+                name=str(item["name"]),
+                type=source_type,
+                url=str(item["url"]),
+                options=options,
+            )
+        )
+    return specs
+
+
+def resolve_source_specs(argv: Optional[Sequence[str]] = None) -> List[SourceSpec]:
+    args = list(argv if argv is not None else [])
+    if args:
+        return load_source_specs_from_file(args[0])
+
+    if os.path.exists(DEFAULT_FEEDS_PATH):
+        return load_source_specs_from_file(DEFAULT_FEEDS_PATH)
+
+    return list(DEFAULT_SOURCE_SPECS)
