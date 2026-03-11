@@ -103,11 +103,19 @@ pip install -e .
 python3 -m unittest discover -s tests
 ```
 
+## Releases
+
+This repository uses conventional commits via PR titles and Release Please for automated release PRs.
+
+- Open PRs with conventional titles such as `feat(ui): improve header layout` or `fix(domain): handle resolved incidents`
+- Squash merge PRs into `main`
+- Let Release Please open the release PR that updates the version and `CHANGELOG.md`
+- Merge the Release Please PR to create the GitHub release and tag
+
 ## Roadmap
 
 - Better HTML/status-page extraction
 - JSON/API-based source adapters
-- More robust packaging and release automation
 - Better screenshots/demo assets for the README
 
 ## Limitations

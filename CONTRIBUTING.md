@@ -14,6 +14,19 @@ pip install -e .
 python3 -m unittest discover -s tests
 ```
 
+## Pull request titles
+
+This repository uses conventional PR titles and prefers squash merges on `main`.
+
+Valid examples:
+
+- `feat(sources): add statuspage api adapter`
+- `fix(domain): resolve resolved incidents correctly`
+- `docs: clarify config examples`
+- `refactor!: simplify source registry`
+
+Use `!` for breaking changes in PR titles, since PR titles are single-line and do not support full commit bodies.
+
 ## Project expectations
 
 - Keep changes focused and easy to review.
@@ -34,3 +47,10 @@ python3 -m unittest discover -s tests
 - Include a short description of the user-facing impact.
 - Mention any config or compatibility implications.
 - Include tests or explain why tests were not added.
+- Use a conventional PR title so the squash-merge commit is release-ready.
+
+## Releases
+
+- Release Please manages version bumps, changelog updates, tags, and GitHub releases.
+- Do not manually edit version numbers in `pyproject.toml` or `status_watcher/__init__.py` for normal releases.
+- Merge the Release Please PR to cut the next release.
