@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "status-watcher"
+version = "0.1.0"
+description = "Terminal dashboard for monitoring vendor status feeds and status pages."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Angelo" },
+]
+keywords = ["status", "monitoring", "terminal", "rss", "atom", "rich"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: System :: Monitoring",
+  "Topic :: Terminals",
+]
+dependencies = [
+  "rich>=13.7,<15",
+]
+
+[project.optional-dependencies]
+dev = []
+
+[project.scripts]
+status-watcher = "status_watcher.app:main"
+
+[tool.setuptools]
+packages = ["status_watcher", "status_watcher.sources"]

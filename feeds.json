@@ -10,5 +10,9 @@
     {
         "name": "GCP",
         "url": "https://status.cloud.google.com/en/feed.atom"
+    },
+    {
+        "name": "GitHub",
+        "url": "https://www.githubstatus.com/history.atom"
     }
 ]
