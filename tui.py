@@ -16,6 +16,11 @@ Usage:
     python3 status_dashboard.py
     python3 status_dashboard.py feeds.json
 
+Behavior:
+    Uses ./feeds.json when present.
+    Falls back to built-in defaults if no feed file exists.
+    An explicit CLI path overrides both.
+
 Keys:
     q         quit
     j / down  move down
@@ -129,6 +134,19 @@ STATE_PREFIX_RE = re.compile(
     r"^(investigating|identified|monitoring|resolved|update|completed|in progress|scheduled)\s*-\s*",
     re.IGNORECASE,
 )
+INCIDENT_NOISE_PATTERNS = [
+    re.compile(r"\bwe are experiencing (?:an )?issue with\b", re.IGNORECASE),
+    re.compile(r"\bwe are aware of (?:an )?issue with\b", re.IGNORECASE),
+    re.compile(r"\bwe have identified (?:an )?issue with\b", re.IGNORECASE),
+    re.compile(r"\bthe issue with\b", re.IGNORECASE),
+    re.compile(r"\bthis issue with\b", re.IGNORECASE),
+    re.compile(r"\bhas been resolved\b", re.IGNORECASE),
+    re.compile(r"\bhas now been resolved\b", re.IGNORECASE),
+    re.compile(r"\bis resolved\b", re.IGNORECASE),
+    re.compile(r"\bhas been restored\b", re.IGNORECASE),
+    re.compile(r"\bhas recovered\b", re.IGNORECASE),
+    re.compile(r"\b(investigating|identified|monitoring|resolved|completed|update)\b", re.IGNORECASE),
+]
 
 
 @dataclass
@@ -250,8 +268,10 @@ def contains_any(text: str, terms: List[str]) -> bool:
 
 
 def normalize_incident_key(title: str, summary: str) -> str:
-    source = strip_html(title or summary or "")
+    source = strip_html(" ".join(part for part in [title, summary] if part))
     source = STATE_PREFIX_RE.sub("", source)
+    for pattern in INCIDENT_NOISE_PATTERNS:
+        source = pattern.sub(" ", source)
     source = source.lower()
     source = re.sub(r"[^a-z0-9\s]+", " ", source)
     source = SPACE_RE.sub(" ", source).strip()
@@ -345,7 +365,9 @@ def classify_entry(entry: FeedEntry) -> Dict[str, Any]:
     active = contains_any(combined, ACTIVE_TERMS)
     degraded = contains_any(combined, DEGRADED_TERMS)
 
-    if resolved and not active:
+    # Resolution should take precedence over lingering words like
+    # "monitoring" in a final incident update.
+    if resolved:
         state = "resolved"
     elif active:
         state = "issue"
@@ -497,6 +519,17 @@ def load_feeds_from_file(path: str) -> List[Dict[str, str]]:
             raise ValueError("Each feed must contain 'name' and 'url'")
         feeds.append({"name": str(item["name"]), "url": str(item["url"])})
     return feeds
+
+
+def resolve_feeds() -> List[Dict[str, str]]:
+    if len(sys.argv) > 1:
+        return load_feeds_from_file(sys.argv[1])
+
+    default_path = "feeds.json"
+    if os.path.exists(default_path):
+        return load_feeds_from_file(default_path)
+
+    return DEFAULT_FEEDS
 
 
 class KeyboardReader:
@@ -760,9 +793,7 @@ def build_layout(statuses: List[ServiceStatus], selected: int, last_refresh: flo
 
 
 def main() -> int:
-    feeds = DEFAULT_FEEDS
-    if len(sys.argv) > 1:
-        feeds = load_feeds_from_file(sys.argv[1])
+    feeds = resolve_feeds()
 
     console = Console()
     keyboard = KeyboardReader()
