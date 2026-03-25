@@ -1,7 +1,8 @@
 [
   {
     "name": "Claude",
-    "url": "https://status.claude.com/history.atom"
+    "type": "statuspage",
+    "url": "https://status.claude.com"
   },
   {
     "name": "OpenAI",

@@ -1,18 +1,19 @@
 [
-    {
-        "name": "Claude",
-        "url": "https://status.claude.com/history.atom"
-    },
-    {
-        "name": "OpenAI",
-        "url": "https://status.openai.com/feed.atom"
-    },
-    {
-        "name": "GCP",
-        "url": "https://status.cloud.google.com/en/feed.atom"
-    },
-    {
-        "name": "GitHub",
-        "url": "https://www.githubstatus.com/history.atom"
-    }
+  {
+    "name": "Claude",
+    "type": "statuspage",
+    "url": "https://status.claude.com"
+  },
+  {
+    "name": "OpenAI",
+    "url": "https://status.openai.com/feed.atom"
+  },
+  {
+    "name": "GCP",
+    "url": "https://status.cloud.google.com/en/feed.atom"
+  },
+  {
+    "name": "GitHub",
+    "url": "https://www.githubstatus.com/history.atom"
+  }
 ]

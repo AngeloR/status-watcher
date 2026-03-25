@@ -3,11 +3,13 @@ from __future__ import annotations
 from status_watcher.models import FeedEntry, SourceSpec
 from status_watcher.sources.feed import FeedSourceAdapter
 from status_watcher.sources.html_page import HtmlSourceAdapter
+from status_watcher.sources.statuspage import StatuspageSourceAdapter
 
 
 ADAPTERS = {
     "feed": FeedSourceAdapter(),
     "html": HtmlSourceAdapter(),
+    "statuspage": StatuspageSourceAdapter(),
 }
 
 

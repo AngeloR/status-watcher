@@ -11,8 +11,8 @@ from status_watcher.models import SourceSpec
 DEFAULT_SOURCE_SPECS = [
     SourceSpec(
         name="Claude",
-        type="feed",
-        url="https://status.claude.com/history.atom",
+        type="statuspage",
+        url="https://status.claude.com",
     ),
 ]
 

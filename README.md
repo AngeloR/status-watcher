@@ -8,13 +8,14 @@
 
 - Rich terminal UI with keyboard navigation and auto-refresh
 - Atom and RSS feed support out of the box
+- Generic Atlassian Statuspage adapter for public `summary.json` and incident timelines
 - Adapter registry for future source types
 - Backward-compatible `feeds.json` config
 - Centralized incident normalization and status inference
 
 ## Current Status
 
-This project is early-stage (`0.1.0`). Feed-based sources are the primary supported mode today. The HTML adapter exists as a basic extension point and should be treated as experimental.
+This project is early-stage (`0.2.0`). Feed-based sources remain supported, and public Statuspage sites now have a first-class adapter. The HTML adapter still exists as a basic extension point and should be treated as experimental.
 
 ## Installation
 
@@ -56,16 +57,21 @@ Minimal feed entry:
 ```json
 [
   {
-    "name": "Claude",
-    "url": "https://status.claude.com/history.atom"
+    "name": "GitHub",
+    "url": "https://www.githubstatus.com/history.atom"
   }
 ]
 ```
 
-Explicit source type:
+Explicit source types:
 
 ```json
 [
+  {
+    "name": "Claude",
+    "type": "statuspage",
+    "url": "https://status.claude.com"
+  },
   {
     "name": "GitHub",
     "type": "feed",
@@ -80,6 +86,8 @@ Explicit source type:
 ```
 
 `type` is optional and defaults to `feed`.
+
+Statuspage sources also accept `recent_incidents` to control how much recent incident history is pulled from `incidents.json`.
 
 ## Architecture
 
@@ -107,7 +115,7 @@ python3 -m unittest discover -s tests
 
 This repository uses conventional commits via PR titles and Release Please for automated release PRs.
 
-- Open PRs with conventional titles such as `feat(ui): improve header layout` or `fix(domain): handle resolved incidents`
+- Open PRs with conventional titles such as `feat(sources): add statuspage api adapter` or `fix(domain): handle resolved incidents`
 - Squash merge PRs into `main`
 - Let Release Please open the release PR that updates the version and `CHANGELOG.md`
 - Merge the Release Please PR to create the GitHub release and tag
@@ -120,7 +128,7 @@ This repository uses conventional commits via PR titles and Release Please for a
 
 ## Limitations
 
-- Status inference is heuristic and feed-dependent
+- Status inference is heuristic and source-dependent
 - HTML support is not yet site-specific or hardened
 - The dashboard is terminal-first and not intended as a library API yet
 
