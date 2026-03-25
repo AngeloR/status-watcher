@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 
 from status_watcher.domain import parse_date
 from status_watcher.models import FeedEntry, SourceSpec
-from status_watcher.sources.base import fetch_url
+from status_watcher.sources.base import fetch_url, load_cached_response, store_cached_response
 
 
 COMPONENT_STATUS_LABELS = {
@@ -33,11 +33,27 @@ def statuspage_endpoint(base_url: str, path: str) -> str:
     return urljoin(base_url + "/", f"api/v2/{path}")
 
 
-def fetch_statuspage_json(base_url: str, path: str) -> Dict[str, Any]:
-    raw = fetch_url(statuspage_endpoint(base_url, path))
+def decode_statuspage_json(raw: bytes, path: str) -> Dict[str, Any]:
     data = json.loads(raw.decode("utf-8"))
     if not isinstance(data, dict):
         raise ValueError(f"Unexpected Statuspage payload for {path}")
+    return data
+
+
+def fetch_statuspage_json(base_url: str, path: str) -> Dict[str, Any]:
+    url = statuspage_endpoint(base_url, path)
+    raw = fetch_url(url, accept="application/json, */*;q=0.1")
+    try:
+        data = decode_statuspage_json(raw, path)
+    except Exception:
+        cached = load_cached_response(url)
+        if cached is None or cached == raw:
+            raise
+        data = decode_statuspage_json(cached, path)
+        store_cached_response(url, cached)
+        return data
+
+    store_cached_response(url, raw)
     return data
 
 

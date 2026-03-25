@@ -18,6 +18,8 @@ DEFAULT_SOURCE_SPECS = [
 
 REFRESH_SECONDS = 120
 HTTP_TIMEOUT_SECONDS = 15
+HTTP_RETRY_ATTEMPTS = 3
+HTTP_RETRY_BACKOFF_SECONDS = 1.0
 USER_AGENT = "status-dashboard/2.0 (+rich terminal monitor)"
 MAX_ENTRIES_PER_FEED = 30
 MAX_HISTORY_EVENTS_PER_SERVICE = 20
@@ -25,6 +27,10 @@ DEFAULT_FEEDS_PATH = "feeds.json"
 DEFAULT_STATE_PATH = os.environ.get(
     "STATUS_WATCHER_STATE_PATH",
     os.path.join(os.path.expanduser("~"), ".status-watcher", "state.json"),
+)
+DEFAULT_CACHE_DIR = os.environ.get(
+    "STATUS_WATCHER_CACHE_DIR",
+    os.path.join(os.path.dirname(DEFAULT_STATE_PATH), "cache"),
 )
 
 
