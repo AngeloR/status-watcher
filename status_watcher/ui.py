@@ -14,7 +14,7 @@ from rich.table import Table
 from rich.text import Text
 
 from status_watcher.domain import fmt_age, strip_html
-from status_watcher.models import ServiceStatus
+from status_watcher.models import IncidentSnapshot, ServiceStatus
 
 
 PALETTE = {
@@ -70,6 +70,16 @@ def severity_glyph(severity: str) -> str:
     }.get(severity, "◇")
 
 
+def incident_severity(incident: IncidentSnapshot) -> str:
+    return "issue" if incident.state == "issue" else "degraded"
+
+
+def status_signal_text(status: ServiceStatus) -> str:
+    if len(status.current_incidents) > 1:
+        return f"{len(status.current_incidents)} live incidents"
+    return strip_html(status.headline)
+
+
 def build_summary_table(statuses: List[ServiceStatus], selected: int) -> Table:
     table = Table(
         box=box.SIMPLE_HEAVY,
@@ -89,7 +99,7 @@ def build_summary_table(statuses: List[ServiceStatus], selected: int) -> Table:
         pointer = ">" if idx == selected else " "
         glyph = Text(severity_glyph(status.severity), style=severity_style(status.severity))
         label = Text(severity_label(status.severity), style=severity_style(status.severity))
-        headline = strip_html(status.headline)
+        headline = status_signal_text(status)
         updated = fmt_age(status.updated)
         row_style = f"bold {PALETTE['white']} on #0A1418" if idx == selected else PALETTE["white"]
         service = Text.assemble(
@@ -102,6 +112,41 @@ def build_summary_table(statuses: List[ServiceStatus], selected: int) -> Table:
         table.add_row(glyph, service, label, Text(updated, style=age_style), signal, style=row_style)
 
     return table
+
+
+def build_live_incidents(status: ServiceStatus) -> List[Any]:
+    body: List[Any] = []
+    if not status.current_incidents:
+        body.append(Text("INCIDENT TRACE", style=f"bold {PALETTE['cyan']}"))
+        body.append(Text(strip_html(status.details) or "No details available.", style=PALETTE["white"]))
+        return body
+
+    heading = "INCIDENT TRACE" if len(status.current_incidents) == 1 else f"LIVE INCIDENTS ({len(status.current_incidents)})"
+    body.append(Text(heading, style=f"bold {PALETTE['cyan']}"))
+
+    for incident in status.current_incidents[:5]:
+        ts = fmt_age(incident.updated)
+        title = strip_html(incident.title) or "(untitled incident)"
+        summary = strip_html(incident.summary)
+        if len(summary) > 220:
+            summary = summary[:217] + "..."
+        accent_style = severity_style(incident_severity(incident))
+        body.append(
+            Text.assemble(
+                (severity_glyph(incident_severity(incident)), accent_style),
+                (" ", ""),
+                (title, f"bold {PALETTE['white']}"),
+                (f"   {ts}", f"bold {PALETTE['dim']}"),
+            )
+        )
+        if summary:
+            body.append(Text(f"  {summary}", style=PALETTE["dim"]))
+
+    if len(status.current_incidents) > 5:
+        remaining = len(status.current_incidents) - 5
+        body.append(Text(f"  +{remaining} more live incidents not shown", style=PALETTE["dim"]))
+
+    return body
 
 
 def build_details_panel(status: Optional[ServiceStatus]) -> Panel:
@@ -126,8 +171,7 @@ def build_details_panel(status: Optional[ServiceStatus]) -> Panel:
     body.append(Text(f"LINK  {status.url}", style=PALETTE["dim"]))
     body.append(Text(f"SYNC  {fmt_age(status.updated)}", style=PALETTE["dim"]))
     body.append(Rule(style=PALETTE["grid"]))
-    body.append(Text("INCIDENT TRACE", style=f"bold {PALETTE['cyan']}"))
-    body.append(Text(strip_html(status.details) or "No details available.", style=PALETTE["white"]))
+    body.extend(build_live_incidents(status))
 
     recent_entries = status.entries[:5]
     if recent_entries:

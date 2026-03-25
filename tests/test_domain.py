@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import datetime as dt
 import unittest
 
-from status_watcher.domain import classify_entry, normalize_incident_key
+from status_watcher.domain import classify_entry, infer_service_status, normalize_incident_key
 from status_watcher.models import FeedEntry
 
 
@@ -29,6 +30,34 @@ class DomainTests(unittest.TestCase):
         classified = classify_entry(entry)
 
         self.assertEqual(classified["state"], "resolved")
+
+    def test_infer_service_status_keeps_multiple_live_incidents(self) -> None:
+        now = dt.datetime(2026, 3, 25, 14, 33, tzinfo=dt.timezone.utc)
+        entries = [
+            FeedEntry(
+                title="Identified - Elevated Errors on claude.ai",
+                summary="The issue has been identified and a fix is being implemented.",
+                updated=now,
+            ),
+            FeedEntry(
+                title="Investigating - Elevated Errors on claude.ai",
+                summary="We are currently investigating this issue.",
+                updated=now - dt.timedelta(minutes=40),
+            ),
+            FeedEntry(
+                title="Investigating - Elevated connection reset errors in Cowork",
+                summary="We are currently investigating this issue.",
+                updated=now - dt.timedelta(minutes=5),
+            ),
+        ]
+
+        status = infer_service_status("Claude", "https://status.claude.com/history.atom", entries)
+
+        self.assertEqual(status.severity, "issue")
+        self.assertEqual(status.headline, "2 live incidents")
+        self.assertEqual(len(status.current_incidents), 2)
+        self.assertEqual(status.current_incidents[0].title, "Identified - Elevated Errors on claude.ai")
+        self.assertEqual(status.current_incidents[1].title, "Investigating - Elevated connection reset errors in Cowork")
 
 
 if __name__ == "__main__":

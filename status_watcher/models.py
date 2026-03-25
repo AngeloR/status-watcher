@@ -23,6 +23,14 @@ class FeedEntry:
 
 
 @dataclass
+class IncidentSnapshot:
+    title: str
+    summary: str
+    updated: Optional[dt.datetime]
+    state: str
+
+
+@dataclass
 class ServiceStatus:
     name: str
     url: str
@@ -33,3 +41,4 @@ class ServiceStatus:
     updated: Optional[dt.datetime]
     error: Optional[str] = None
     entries: List[FeedEntry] = field(default_factory=list)
+    current_incidents: List[IncidentSnapshot] = field(default_factory=list)

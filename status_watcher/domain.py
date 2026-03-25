@@ -8,7 +8,7 @@ from email.utils import parsedate_to_datetime
 from typing import Any, Dict, List, Optional
 
 from status_watcher.config import MAX_ENTRIES_PER_FEED
-from status_watcher.models import FeedEntry, ServiceStatus
+from status_watcher.models import FeedEntry, IncidentSnapshot, ServiceStatus
 
 
 ACTIVE_TERMS = [
@@ -57,6 +57,7 @@ STATE_PREFIX_RE = re.compile(
     r"^(investigating|identified|monitoring|resolved|update|completed|in progress|scheduled)\s*-\s*",
     re.IGNORECASE,
 )
+STATE_SUFFIX_RE = re.compile(r"\b(resolved|completed|restored|recovered|operational)\b$", re.IGNORECASE)
 INCIDENT_NOISE_PATTERNS = [
     re.compile(r"\bwe are experiencing (?:an )?issue with\b", re.IGNORECASE),
     re.compile(r"\bwe are aware of (?:an )?issue with\b", re.IGNORECASE),
@@ -70,6 +71,15 @@ INCIDENT_NOISE_PATTERNS = [
     re.compile(r"\bhas recovered\b", re.IGNORECASE),
     re.compile(r"\b(investigating|identified|monitoring|resolved|completed|update)\b", re.IGNORECASE),
 ]
+GENERIC_INCIDENT_KEYS = {
+    "incident",
+    "issue",
+    "service issue",
+    "degraded performance",
+    "partial outage",
+    "major outage",
+    "outage",
+}
 
 
 def now_utc() -> dt.datetime:
@@ -127,14 +137,22 @@ def contains_any(text: str, terms: List[str]) -> bool:
     return any(term in lower for term in terms)
 
 
-def normalize_incident_key(title: str, summary: str) -> str:
-    source = strip_html(" ".join(part for part in [title, summary] if part))
+def normalize_incident_text(text: str) -> str:
+    source = strip_html(text)
     source = STATE_PREFIX_RE.sub("", source)
+    source = STATE_SUFFIX_RE.sub("", source)
     for pattern in INCIDENT_NOISE_PATTERNS:
         source = pattern.sub(" ", source)
     source = source.lower()
     source = re.sub(r"[^a-z0-9\s]+", " ", source)
     return SPACE_RE.sub(" ", source).strip()
+
+
+def normalize_incident_key(title: str, summary: str) -> str:
+    title_key = normalize_incident_text(title)
+    if title_key and title_key not in GENERIC_INCIDENT_KEYS:
+        return title_key
+    return normalize_incident_text(" ".join(part for part in [title, summary] if part))
 
 
 def classify_entry(entry: FeedEntry) -> Dict[str, Any]:
@@ -164,6 +182,26 @@ def classify_entry(entry: FeedEntry) -> Dict[str, Any]:
     }
 
 
+def sort_incidents(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return sorted(
+        items,
+        key=lambda item: item["updated"] or dt.datetime.min.replace(tzinfo=dt.timezone.utc),
+        reverse=True,
+    )
+
+
+def snapshot_incidents(items: List[Dict[str, Any]]) -> List[IncidentSnapshot]:
+    return [
+        IncidentSnapshot(
+            title=item["title"],
+            summary=item["summary"],
+            updated=item["updated"],
+            state=item["state"],
+        )
+        for item in items
+    ]
+
+
 def infer_service_status(name: str, url: str, entries: List[FeedEntry]) -> ServiceStatus:
     if not entries:
         return ServiceStatus(
@@ -184,41 +222,46 @@ def infer_service_status(name: str, url: str, entries: List[FeedEntry]) -> Servi
         if key not in latest_by_key:
             latest_by_key[key] = item
 
-    active = [item for item in latest_by_key.values() if item["state"] == "issue"]
-    degraded = [item for item in latest_by_key.values() if item["state"] == "degraded"]
+    active = sort_incidents([item for item in latest_by_key.values() if item["state"] == "issue"])
+    degraded = sort_incidents([item for item in latest_by_key.values() if item["state"] == "degraded"])
+    current_incidents = snapshot_incidents(sort_incidents(active + degraded))
 
     if active:
-        active.sort(
-            key=lambda item: item["updated"] or dt.datetime.min.replace(tzinfo=dt.timezone.utc),
-            reverse=True,
-        )
         top = active[0]
+        headline = top["title"] or "Active issue"
+        details = top["summary"] or top["title"] or "Issue inferred from recent feed entries."
+        if len(current_incidents) > 1:
+            headline = f"{len(current_incidents)} live incidents"
+            details = "Multiple ongoing incidents detected. See live incidents below."
         return ServiceStatus(
             name=name,
             url=url,
             ok=False,
             severity="issue",
-            headline=top["title"] or "Active issue",
-            details=top["summary"] or top["title"] or "Issue inferred from recent feed entries.",
+            headline=headline,
+            details=details,
             updated=top["updated"],
             entries=entries,
+            current_incidents=current_incidents,
         )
 
     if degraded:
-        degraded.sort(
-            key=lambda item: item["updated"] or dt.datetime.min.replace(tzinfo=dt.timezone.utc),
-            reverse=True,
-        )
         top = degraded[0]
+        headline = top["title"] or "Degraded"
+        details = top["summary"] or top["title"] or "Degraded state inferred from recent feed entries."
+        if len(current_incidents) > 1:
+            headline = f"{len(current_incidents)} live incidents"
+            details = "Multiple ongoing degraded incidents detected. See live incidents below."
         return ServiceStatus(
             name=name,
             url=url,
             ok=False,
             severity="degraded",
-            headline=top["title"] or "Degraded",
-            details=top["summary"] or top["title"] or "Degraded state inferred from recent feed entries.",
+            headline=headline,
+            details=details,
             updated=top["updated"],
             entries=entries,
+            current_incidents=current_incidents,
         )
 
     latest = entries[0]
