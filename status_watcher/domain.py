@@ -197,6 +197,7 @@ def snapshot_incidents(items: List[Dict[str, Any]]) -> List[IncidentSnapshot]:
             summary=item["summary"],
             updated=item["updated"],
             state=item["state"],
+            key=item["key"],
         )
         for item in items
     ]

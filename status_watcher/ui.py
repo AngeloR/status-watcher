@@ -14,7 +14,7 @@ from rich.table import Table
 from rich.text import Text
 
 from status_watcher.domain import fmt_age, strip_html
-from status_watcher.models import IncidentSnapshot, ServiceStatus
+from status_watcher.models import HistoryEvent, IncidentSnapshot, ServiceStatus
 
 
 PALETTE = {
@@ -149,6 +149,25 @@ def build_live_incidents(status: ServiceStatus) -> List[Any]:
     return body
 
 
+def build_recent_changes(events: List[HistoryEvent]) -> List[Any]:
+    body: List[Any] = []
+    if not events:
+        return body
+
+    body.append(Text(""))
+    body.append(Text("RECENT CHANGES", style=f"bold {PALETTE['cyan']}"))
+    for event in events[:5]:
+        ts = fmt_age(event.timestamp)
+        body.append(
+            Text.assemble(
+                ("> ", severity_style(event.severity)),
+                (event.message, f"bold {PALETTE['white']}"),
+                (f"   {ts}", f"bold {PALETTE['dim']}"),
+            )
+        )
+    return body
+
+
 def build_details_panel(status: Optional[ServiceStatus]) -> Panel:
     if status is None:
         return Panel(
@@ -172,6 +191,7 @@ def build_details_panel(status: Optional[ServiceStatus]) -> Panel:
     body.append(Text(f"SYNC  {fmt_age(status.updated)}", style=PALETTE["dim"]))
     body.append(Rule(style=PALETTE["grid"]))
     body.extend(build_live_incidents(status))
+    body.extend(build_recent_changes(status.recent_changes))
 
     recent_entries = status.entries[:5]
     if recent_entries:

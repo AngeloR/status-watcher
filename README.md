@@ -9,6 +9,7 @@
 - Rich terminal UI with keyboard navigation and auto-refresh
 - Atom and RSS feed support out of the box
 - Generic Atlassian Statuspage adapter for public `summary.json` and incident timelines
+- Persistent per-service change history across refreshes and restarts
 - Adapter registry for future source types
 - Backward-compatible `feeds.json` config
 - Centralized incident normalization and status inference
@@ -39,6 +40,8 @@ You can also run it directly from the repo:
 python3 tui.py
 python3 -m status_watcher
 ```
+
+By default the app persists history to `~/.status-watcher/state.json`. Set `STATUS_WATCHER_STATE_PATH` to override that path.
 
 ## Configuration
 
@@ -95,6 +98,7 @@ The codebase is split into a few small layers:
 
 - `status_watcher.config`: config loading, defaults, runtime constants
 - `status_watcher.domain`: normalized feed parsing helpers, incident matching, status inference
+- `status_watcher.history`: persisted snapshots and change detection
 - `status_watcher.sources`: source adapters and adapter registry
 - `status_watcher.monitor`: load pipeline and service-level error mapping
 - `status_watcher.ui`: Rich rendering

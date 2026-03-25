@@ -14,6 +14,7 @@ from rich.console import Console
 from rich.live import Live
 
 from status_watcher.config import REFRESH_SECONDS, resolve_source_specs
+from status_watcher.history import HistoryStore
 from status_watcher.monitor import load_all
 from status_watcher.ui import build_layout
 
@@ -84,12 +85,17 @@ def normalize_key(key: Optional[str]) -> Optional[str]:
     return keymap.get(key, key)
 
 
+def refresh_statuses(source_specs, history_store: HistoryStore):
+    return history_store.apply(load_all(source_specs))
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     source_specs = resolve_source_specs(argv)
     console = Console()
     keyboard = KeyboardReader()
+    history_store = HistoryStore()
 
-    statuses = load_all(source_specs)
+    statuses = refresh_statuses(source_specs, history_store)
     selected = 0
     last_refresh = time.time()
 
@@ -108,7 +114,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 if key == "quit":
                     break
                 elif key == "refresh":
-                    statuses = load_all(source_specs)
+                    statuses = refresh_statuses(source_specs, history_store)
                     if selected >= len(statuses):
                         selected = max(0, len(statuses) - 1)
                     last_refresh = time.time()
@@ -118,7 +124,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     selected = max(0, selected - 1)
 
                 if time.time() - last_refresh >= REFRESH_SECONDS:
-                    statuses = load_all(source_specs)
+                    statuses = refresh_statuses(source_specs, history_store)
                     if selected >= len(statuses):
                         selected = max(0, len(statuses) - 1)
                     last_refresh = time.time()

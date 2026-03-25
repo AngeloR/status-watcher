@@ -28,6 +28,15 @@ class IncidentSnapshot:
     summary: str
     updated: Optional[dt.datetime]
     state: str
+    key: str = ""
+
+
+@dataclass
+class HistoryEvent:
+    timestamp: Optional[dt.datetime]
+    kind: str
+    message: str
+    severity: str
 
 
 @dataclass
@@ -42,3 +51,4 @@ class ServiceStatus:
     error: Optional[str] = None
     entries: List[FeedEntry] = field(default_factory=list)
     current_incidents: List[IncidentSnapshot] = field(default_factory=list)
+    recent_changes: List[HistoryEvent] = field(default_factory=list)
