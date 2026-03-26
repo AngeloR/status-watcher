@@ -13,8 +13,8 @@ from rich.rule import Rule
 from rich.table import Table
 from rich.text import Text
 
-from status_watcher.domain import fmt_age, strip_html
-from status_watcher.models import HistoryEvent, IncidentSnapshot, ServiceStatus
+from status_watcher.domain import fmt_age, impacted_components, sort_components, strip_html
+from status_watcher.models import ComponentSnapshot, HistoryEvent, IncidentSnapshot, ServiceStatus
 
 
 PALETTE = {
@@ -74,9 +74,28 @@ def incident_severity(incident: IncidentSnapshot) -> str:
     return "issue" if incident.state == "issue" else "degraded"
 
 
+def impacted_count(status: ServiceStatus) -> int:
+    return len([component for component in status.components if component.status in {"issue", "degraded"}])
+
+
+def component_counter(status: ServiceStatus) -> str:
+    if not status.components:
+        return "--"
+    return f"{impacted_count(status)}/{len(status.components)}"
+
+
 def status_signal_text(status: ServiceStatus) -> str:
     if len(status.current_incidents) > 1:
         return f"{len(status.current_incidents)} live incidents"
+    if len(status.current_incidents) == 1:
+        return strip_html(status.headline)
+
+    impacted = impacted_components(status.components)
+    if len(impacted) > 1:
+        return f"{len(impacted)} impacted components"
+    if len(impacted) == 1:
+        component = impacted[0]
+        return f"{component.name}: {component.label}"
     return strip_html(status.headline)
 
 
@@ -92,6 +111,7 @@ def build_summary_table(statuses: List[ServiceStatus], selected: int) -> Table:
     table.add_column("", width=2, justify="center")
     table.add_column("NODE", min_width=16)
     table.add_column("STATE", width=15)
+    table.add_column("COMP", width=7, justify="center")
     table.add_column("AGE", width=10)
     table.add_column("LIVE SIGNAL", ratio=1)
 
@@ -109,7 +129,16 @@ def build_summary_table(statuses: List[ServiceStatus], selected: int) -> Table:
         )
         signal = Text(headline, style=row_style)
         age_style = f"bold {PALETTE['dim']}" if status.severity == "operational" else severity_style(status.severity)
-        table.add_row(glyph, service, label, Text(updated, style=age_style), signal, style=row_style)
+        component_style = f"bold {PALETTE['dim']}" if impacted_count(status) == 0 else severity_style(status.severity)
+        table.add_row(
+            glyph,
+            service,
+            label,
+            Text(component_counter(status), style=component_style),
+            Text(updated, style=age_style),
+            signal,
+            style=row_style,
+        )
 
     return table
 
@@ -145,6 +174,58 @@ def build_live_incidents(status: ServiceStatus) -> List[Any]:
     if len(status.current_incidents) > 5:
         remaining = len(status.current_incidents) - 5
         body.append(Text(f"  +{remaining} more live incidents not shown", style=PALETTE["dim"]))
+
+    return body
+
+
+def component_rows(components: List[ComponentSnapshot]) -> List[ComponentSnapshot]:
+    impacted = impacted_components(components)
+    if impacted:
+        return impacted[:6]
+    return sort_components(components)[:5]
+
+
+def build_component_lines(status: ServiceStatus) -> List[Any]:
+    body: List[Any] = []
+    if not status.components:
+        return body
+
+    impacted = impacted_components(status.components)
+    heading = (
+        f"COMPONENT STATUS ({len(impacted)}/{len(status.components)} impacted)"
+        if impacted
+        else f"COMPONENT STATUS ({len(status.components)} tracked)"
+    )
+    body.append(Text(""))
+    body.append(Text(heading, style=f"bold {PALETTE['cyan']}"))
+
+    visible = component_rows(status.components)
+    for component in visible:
+        ts = fmt_age(component.updated)
+        label = component.label.upper()
+        style = severity_style(component.status)
+        body.append(
+            Text.assemble(
+                (severity_glyph(component.status), style),
+                (" ", ""),
+                (component.name, f"bold {PALETTE['white']}"),
+                ("   ", ""),
+                (label, style),
+                (f"   {ts}", f"bold {PALETTE['dim']}"),
+            )
+        )
+        details = strip_html(component.details)
+        if details and details.lower() != component.name.lower():
+            if len(details) > 180:
+                details = details[:177] + "..."
+            body.append(Text(f"  {details}", style=PALETTE["dim"]))
+
+    if impacted:
+        hidden_stable = len(status.components) - len(impacted)
+        if hidden_stable > 0:
+            body.append(Text(f"  {hidden_stable} stable components hidden", style=PALETTE["dim"]))
+    elif len(status.components) > len(visible):
+        body.append(Text(f"  +{len(status.components) - len(visible)} more components not shown", style=PALETTE["dim"]))
 
     return body
 
@@ -189,8 +270,11 @@ def build_details_panel(status: Optional[ServiceStatus]) -> Panel:
     )
     body.append(Text(f"LINK  {status.url}", style=PALETTE["dim"]))
     body.append(Text(f"SYNC  {fmt_age(status.updated)}", style=PALETTE["dim"]))
+    if status.components:
+        body.append(Text(f"COMP  {component_counter(status)} impacted", style=PALETTE["dim"]))
     body.append(Rule(style=PALETTE["grid"]))
     body.extend(build_live_incidents(status))
+    body.extend(build_component_lines(status))
     body.extend(build_recent_changes(status.recent_changes))
 
     recent_entries = status.entries[:5]
@@ -229,6 +313,7 @@ def build_header(statuses: List[ServiceStatus], last_refresh: float, refresh_sec
     issues = sum(1 for status in statuses if status.severity == "issue")
     degraded = sum(1 for status in statuses if status.severity == "degraded")
     errors = sum(1 for status in statuses if status.severity == "error")
+    impacted = sum(impacted_count(status) for status in statuses)
 
     age = int(time.time() - last_refresh)
     alert_state = "GREEN" if issues == 0 and degraded == 0 and errors == 0 else "ALERT"
@@ -244,6 +329,7 @@ def build_header(statuses: List[ServiceStatus], last_refresh: float, refresh_sec
         ("   STABLE ", f"bold {PALETTE['dim']}"), (str(operational), f"bold {PALETTE['green']}"),
         ("   DEGRADED ", f"bold {PALETTE['dim']}"), (str(degraded), f"bold {PALETTE['amber']}"),
         ("   FAILURES ", f"bold {PALETTE['dim']}"), (str(issues + errors), f"bold {PALETTE['red']}"),
+        ("   COMPONENTS ", f"bold {PALETTE['dim']}"), (str(impacted), f"bold {PALETTE['amber'] if impacted else PALETTE['green']}"),
     )
     ops = Text.assemble(
         ("ALERT ", f"bold {PALETTE['dim']}"), (alert_state, alert_style),

@@ -6,7 +6,7 @@ import urllib.error
 import urllib.request
 
 from pathlib import Path
-from typing import Protocol
+from typing import Mapping, Protocol
 
 from status_watcher.config import (
     DEFAULT_CACHE_DIR,
@@ -15,7 +15,7 @@ from status_watcher.config import (
     HTTP_TIMEOUT_SECONDS,
     USER_AGENT,
 )
-from status_watcher.models import FeedEntry, SourceSpec
+from status_watcher.models import SourceSnapshot, SourceSpec
 
 
 DEFAULT_ACCEPT_HEADER = "application/atom+xml, application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.1"
@@ -23,7 +23,7 @@ TRANSIENT_HTTP_STATUS_CODES = {408, 425, 429, 500, 502, 503, 504}
 
 
 class SourceAdapter(Protocol):
-    def load(self, spec: SourceSpec) -> list[FeedEntry]:
+    def load(self, spec: SourceSpec) -> SourceSnapshot:
         ...
 
 
@@ -48,14 +48,15 @@ def store_cached_response(url: str, payload: bytes) -> None:
     path.write_bytes(payload)
 
 
-def fetch_url(url: str, accept: str = DEFAULT_ACCEPT_HEADER) -> bytes:
-    req = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent": USER_AGENT,
-            "Accept": accept,
-        },
-    )
+def fetch_url(url: str, accept: str = DEFAULT_ACCEPT_HEADER, headers: Mapping[str, str] | None = None) -> bytes:
+    request_headers = {
+        "User-Agent": USER_AGENT,
+        "Accept": accept,
+    }
+    if headers:
+        request_headers.update({str(key): str(value) for key, value in headers.items()})
+
+    req = urllib.request.Request(url, headers=request_headers)
 
     last_error: Exception | None = None
     for attempt in range(HTTP_RETRY_ATTEMPTS):

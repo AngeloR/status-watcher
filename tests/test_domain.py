@@ -4,7 +4,7 @@ import datetime as dt
 import unittest
 
 from status_watcher.domain import classify_entry, infer_service_status, normalize_incident_key
-from status_watcher.models import FeedEntry
+from status_watcher.models import ComponentSnapshot, FeedEntry
 
 
 class DomainTests(unittest.TestCase):
@@ -58,6 +58,31 @@ class DomainTests(unittest.TestCase):
         self.assertEqual(len(status.current_incidents), 2)
         self.assertEqual(status.current_incidents[0].title, "Identified - Elevated Errors on claude.ai")
         self.assertEqual(status.current_incidents[1].title, "Investigating - Elevated connection reset errors in Cowork")
+
+    def test_infer_service_status_uses_components_when_no_incidents_exist(self) -> None:
+        now = dt.datetime(2026, 3, 25, 14, 33, tzinfo=dt.timezone.utc)
+        components = [
+            ComponentSnapshot(
+                name="API",
+                status="issue",
+                label="Major outage",
+                updated=now,
+                details="API is currently unavailable.",
+            ),
+            ComponentSnapshot(
+                name="Dashboard",
+                status="operational",
+                label="Operational",
+                updated=now,
+            ),
+        ]
+
+        status = infer_service_status("Example", "https://status.example.com", [], components)
+
+        self.assertEqual(status.severity, "issue")
+        self.assertEqual(status.headline, "API major outage")
+        self.assertEqual(len(status.components), 2)
+        self.assertIn("unavailable", status.details.lower())
 
 
 if __name__ == "__main__":

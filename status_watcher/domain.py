@@ -5,10 +5,10 @@ import html
 import re
 
 from email.utils import parsedate_to_datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 from status_watcher.config import MAX_ENTRIES_PER_FEED
-from status_watcher.models import FeedEntry, IncidentSnapshot, ServiceStatus
+from status_watcher.models import ComponentSnapshot, FeedEntry, IncidentSnapshot, ServiceStatus
 
 
 ACTIVE_TERMS = [
@@ -50,6 +50,28 @@ DEGRADED_TERMS = [
     "timeouts",
     "latency",
 ]
+
+COMPONENT_STATUS_MAP = {
+    "operational": ("operational", "Operational"),
+    "none": ("operational", "Operational"),
+    "ok": ("operational", "Operational"),
+    "up": ("operational", "Operational"),
+    "healthy": ("operational", "Healthy"),
+    "available": ("operational", "Available"),
+    "degraded": ("degraded", "Degraded"),
+    "degraded_performance": ("degraded", "Degraded performance"),
+    "partial_outage": ("degraded", "Partial outage"),
+    "under_maintenance": ("degraded", "Under maintenance"),
+    "maintenance": ("degraded", "Maintenance"),
+    "minor": ("degraded", "Minor issue"),
+    "warning": ("degraded", "Warning"),
+    "major_outage": ("issue", "Major outage"),
+    "outage": ("issue", "Outage"),
+    "down": ("issue", "Down"),
+    "critical": ("issue", "Critical"),
+    "failed": ("issue", "Failed"),
+    "unknown": ("unknown", "Unknown"),
+}
 
 TAG_RE = re.compile(r"<[^>]+>")
 SPACE_RE = re.compile(r"\s+")
@@ -132,7 +154,7 @@ def fmt_age(ts: Optional[dt.datetime]) -> str:
     return f"{hours // 24}d ago"
 
 
-def contains_any(text: str, terms: List[str]) -> bool:
+def contains_any(text: str, terms: Sequence[str]) -> bool:
     lower = text.lower()
     return any(term in lower for term in terms)
 
@@ -153,6 +175,25 @@ def normalize_incident_key(title: str, summary: str) -> str:
     if title_key and title_key not in GENERIC_INCIDENT_KEYS:
         return title_key
     return normalize_incident_text(" ".join(part for part in [title, summary] if part))
+
+
+def normalize_component_status(raw_status: str) -> tuple[str, str]:
+    raw_text = strip_html(raw_status)
+    if not raw_text:
+        return ("unknown", "Unknown")
+
+    cleaned = raw_text.lower().strip().replace("-", "_")
+    cleaned = re.sub(r"\s+", "_", cleaned)
+    if cleaned in COMPONENT_STATUS_MAP:
+        return COMPONENT_STATUS_MAP[cleaned]
+
+    if contains_any(cleaned, ["major", "outage", "down", "critical", "failed", "unavailable"]):
+        return ("issue", raw_text.title())
+    if contains_any(cleaned, ["degraded", "partial", "maintenance", "minor", "warning", "elevated"]):
+        return ("degraded", raw_text.title())
+    if contains_any(cleaned, ["operational", "healthy", "available", "up", "ok"]):
+        return ("operational", raw_text.title())
+    return ("unknown", raw_text.title())
 
 
 def classify_entry(entry: FeedEntry) -> Dict[str, Any]:
@@ -203,17 +244,78 @@ def snapshot_incidents(items: List[Dict[str, Any]]) -> List[IncidentSnapshot]:
     ]
 
 
-def infer_service_status(name: str, url: str, entries: List[FeedEntry]) -> ServiceStatus:
-    if not entries:
+def component_priority(status: str) -> int:
+    return {
+        "issue": 0,
+        "degraded": 1,
+        "unknown": 2,
+        "operational": 3,
+    }.get(status, 2)
+
+
+def sort_components(components: Sequence[ComponentSnapshot]) -> List[ComponentSnapshot]:
+    return sorted(
+        components,
+        key=lambda component: (
+            component_priority(component.status),
+            -(component.updated.timestamp()) if component.updated else float("inf"),
+            component.name.lower(),
+        ),
+    )
+
+
+def impacted_components(components: Sequence[ComponentSnapshot]) -> List[ComponentSnapshot]:
+    return [component for component in sort_components(components) if component.status in {"issue", "degraded"}]
+
+
+def latest_timestamp(items: Sequence[object]) -> Optional[dt.datetime]:
+    timestamps = [getattr(item, "updated", None) for item in items]
+    timestamps = [timestamp for timestamp in timestamps if timestamp is not None]
+    if not timestamps:
+        return None
+    return max(timestamps)
+
+
+def summarize_impacted_components(
+    components: Sequence[ComponentSnapshot],
+) -> tuple[str, str, str, Optional[dt.datetime]]:
+    impacted = impacted_components(components)
+    if not impacted:
+        return ("operational", "Operational", "All tracked components are operational.", latest_timestamp(components))
+
+    top = impacted[0]
+    severity = "issue" if any(component.status == "issue" for component in impacted) else "degraded"
+    if len(impacted) == 1:
+        headline = f"{top.name} {top.label.lower()}"
+        details = top.details or f"{top.name} is reporting {top.label.lower()}."
+    else:
+        names = ", ".join(component.name for component in impacted[:4])
+        remaining = len(impacted) - min(len(impacted), 4)
+        suffix = f" +{remaining} more" if remaining > 0 else ""
+        headline = f"{len(impacted)} impacted components"
+        details = f"Impacted components: {names}{suffix}."
+    return (severity, headline, details, latest_timestamp(impacted))
+
+
+def infer_service_status(
+    name: str,
+    url: str,
+    entries: List[FeedEntry],
+    components: Optional[List[ComponentSnapshot]] = None,
+) -> ServiceStatus:
+    components = sort_components(list(components or []))
+
+    if not entries and not components:
         return ServiceStatus(
             name=name,
             url=url,
             ok=False,
             severity="unknown",
             headline="No entries found",
-            details="The feed loaded but did not contain any entries.",
+            details="The source loaded but did not contain any entries or components.",
             updated=None,
             entries=[],
+            components=[],
         )
 
     classified = [classify_entry(entry) for entry in entries[:MAX_ENTRIES_PER_FEED]]
@@ -230,7 +332,7 @@ def infer_service_status(name: str, url: str, entries: List[FeedEntry]) -> Servi
     if active:
         top = active[0]
         headline = top["title"] or "Active issue"
-        details = top["summary"] or top["title"] or "Issue inferred from recent feed entries."
+        details = top["summary"] or top["title"] or "Issue inferred from recent entries."
         if len(current_incidents) > 1:
             headline = f"{len(current_incidents)} live incidents"
             details = "Multiple ongoing incidents detected. See live incidents below."
@@ -241,15 +343,16 @@ def infer_service_status(name: str, url: str, entries: List[FeedEntry]) -> Servi
             severity="issue",
             headline=headline,
             details=details,
-            updated=top["updated"],
+            updated=top["updated"] or latest_timestamp(components),
             entries=entries,
+            components=components,
             current_incidents=current_incidents,
         )
 
     if degraded:
         top = degraded[0]
         headline = top["title"] or "Degraded"
-        details = top["summary"] or top["title"] or "Degraded state inferred from recent feed entries."
+        details = top["summary"] or top["title"] or "Degraded state inferred from recent entries."
         if len(current_incidents) > 1:
             headline = f"{len(current_incidents)} live incidents"
             details = "Multiple ongoing degraded incidents detected. See live incidents below."
@@ -260,14 +363,45 @@ def infer_service_status(name: str, url: str, entries: List[FeedEntry]) -> Servi
             severity="degraded",
             headline=headline,
             details=details,
-            updated=top["updated"],
+            updated=top["updated"] or latest_timestamp(components),
             entries=entries,
+            components=components,
             current_incidents=current_incidents,
         )
 
-    latest = entries[0]
-    latest_title = strip_html(latest.title) or "Operational"
-    latest_summary = strip_html(latest.summary) or "No active issues inferred from recent entries."
+    impacted = impacted_components(components)
+    if impacted:
+        severity, headline, details, updated = summarize_impacted_components(components)
+        return ServiceStatus(
+            name=name,
+            url=url,
+            ok=False,
+            severity=severity,
+            headline=headline,
+            details=details,
+            updated=updated,
+            entries=entries,
+            components=components,
+        )
+
+    if entries:
+        latest = entries[0]
+        latest_title = strip_html(latest.title) or "Operational"
+        latest_summary = strip_html(latest.summary) or "No active issues inferred from recent entries."
+        component_note = ""
+        if components:
+            component_note = f" Components: {len(components)}/{len(components)} operational."
+        return ServiceStatus(
+            name=name,
+            url=url,
+            ok=True,
+            severity="operational",
+            headline="Operational",
+            details=f"Latest update: {latest_title}. {latest_summary}{component_note}",
+            updated=latest.updated or latest_timestamp(components),
+            entries=entries,
+            components=components,
+        )
 
     return ServiceStatus(
         name=name,
@@ -275,7 +409,7 @@ def infer_service_status(name: str, url: str, entries: List[FeedEntry]) -> Servi
         ok=True,
         severity="operational",
         headline="Operational",
-        details=f"Latest update: {latest_title}. {latest_summary}",
-        updated=latest.updated,
-        entries=entries,
+        details=f"All {len(components)} tracked components are operational.",
+        updated=latest_timestamp(components),
+        components=components,
     )

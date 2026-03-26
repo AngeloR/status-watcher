@@ -9,7 +9,18 @@
     "url": "https://status.openai.com/feed.atom"
   },
   {
-    "name": "GitHub",
-    "url": "https://www.githubstatus.com/history.atom"
+    "name": "Example HTML Status",
+    "type": "html",
+    "url": "https://example.com/status",
+    "selectors": [".incident"],
+    "component_selectors": [".component"]
+  },
+  {
+    "name": "Example API Status",
+    "type": "json",
+    "url": "https://status.example.com/api/status.json",
+    "entries_path": "data.events[]",
+    "components_path": "data.components[]",
+    "summary_path": "details.text"
   }
 ]

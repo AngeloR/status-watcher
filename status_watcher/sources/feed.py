@@ -4,7 +4,7 @@ import datetime as dt
 import xml.etree.ElementTree as ET
 
 from status_watcher.domain import parse_date
-from status_watcher.models import FeedEntry, SourceSpec
+from status_watcher.models import FeedEntry, SourceSnapshot, SourceSpec
 from status_watcher.sources.base import fetch_url, load_cached_response, store_cached_response
 
 
@@ -68,7 +68,7 @@ def parse_rss(root: ET.Element) -> list[FeedEntry]:
 
 
 class FeedSourceAdapter:
-    def load(self, spec: SourceSpec) -> list[FeedEntry]:
+    def load(self, spec: SourceSpec) -> SourceSnapshot:
         raw = fetch_url(spec.url)
         try:
             entries = parse_feed(raw)
@@ -78,7 +78,7 @@ class FeedSourceAdapter:
                 raise
             entries = parse_feed(cached)
             store_cached_response(spec.url, cached)
-            return entries
+            return SourceSnapshot(entries=entries)
 
         store_cached_response(spec.url, raw)
-        return entries
+        return SourceSnapshot(entries=entries)

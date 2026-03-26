@@ -7,13 +7,13 @@ from typing import List
 
 from status_watcher.domain import infer_service_status
 from status_watcher.models import ServiceStatus, SourceSpec
-from status_watcher.sources import load_entries
+from status_watcher.sources import load_source_snapshot
 
 
 def load_service(spec: SourceSpec) -> ServiceStatus:
     try:
-        entries = load_entries(spec)
-        return infer_service_status(spec.name, spec.url, entries)
+        snapshot = load_source_snapshot(spec)
+        return infer_service_status(spec.name, spec.url, snapshot.entries, snapshot.components)
     except urllib.error.HTTPError as e:
         return ServiceStatus(
             name=spec.name,

@@ -23,6 +23,16 @@ class FeedEntry:
 
 
 @dataclass
+class ComponentSnapshot:
+    name: str
+    status: str  # operational | degraded | issue | unknown
+    label: str
+    updated: Optional[dt.datetime]
+    details: str = ""
+    link: str = ""
+
+
+@dataclass
 class IncidentSnapshot:
     title: str
     summary: str
@@ -40,6 +50,12 @@ class HistoryEvent:
 
 
 @dataclass
+class SourceSnapshot:
+    entries: List[FeedEntry] = field(default_factory=list)
+    components: List[ComponentSnapshot] = field(default_factory=list)
+
+
+@dataclass
 class ServiceStatus:
     name: str
     url: str
@@ -50,5 +66,6 @@ class ServiceStatus:
     updated: Optional[dt.datetime]
     error: Optional[str] = None
     entries: List[FeedEntry] = field(default_factory=list)
+    components: List[ComponentSnapshot] = field(default_factory=list)
     current_incidents: List[IncidentSnapshot] = field(default_factory=list)
     recent_changes: List[HistoryEvent] = field(default_factory=list)

@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import unittest
 
-from status_watcher.sources.statuspage import normalize_statuspage_base, parse_statuspage_entries
+from status_watcher.sources.statuspage import (
+    normalize_statuspage_base,
+    parse_statuspage_components,
+    parse_statuspage_entries,
+)
 
 
 class StatuspageTests(unittest.TestCase):
@@ -78,11 +82,15 @@ class StatuspageTests(unittest.TestCase):
         }
 
         entries = parse_statuspage_entries(summary_payload, incidents_payload, recent_incidents=2)
+        components = parse_statuspage_components(summary_payload)
 
         titles = [entry.title for entry in entries]
         self.assertIn("Investigating - Elevated errors on App", titles)
         self.assertIn("Resolved - Earlier outage", titles)
-        self.assertIn("Partial outage - App", titles)
+        self.assertEqual(len(components), 1)
+        self.assertEqual(components[0].name, "App")
+        self.assertEqual(components[0].status, "degraded")
+        self.assertEqual(components[0].label, "Partial outage")
 
     def test_parse_statuspage_entries_synthesizes_operational_entry_when_empty(self) -> None:
         summary_payload = {

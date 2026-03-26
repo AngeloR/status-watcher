@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import json
 
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, List
 from urllib.parse import urljoin
 
-from status_watcher.domain import parse_date
-from status_watcher.models import FeedEntry, SourceSpec
+from status_watcher.domain import normalize_component_status, parse_date
+from status_watcher.models import ComponentSnapshot, FeedEntry, SourceSnapshot, SourceSpec
 from status_watcher.sources.base import fetch_url, load_cached_response, store_cached_response
 
 
@@ -105,27 +105,6 @@ def incident_to_entries(incident: Dict[str, Any]) -> List[FeedEntry]:
     return [incident_fallback_entry(incident)]
 
 
-def degraded_component_entries(components: Iterable[Dict[str, Any]], page_updated_at: str) -> List[FeedEntry]:
-    entries: List[FeedEntry] = []
-    updated = parse_date(page_updated_at)
-    for component in components:
-        status = str(component.get("status") or "operational")
-        if status == "operational":
-            continue
-        component_name = str(component.get("name") or "Component")
-        label = status_label(status)
-        summary = f"Statuspage reports {component_name} as {label.lower()}."
-        entries.append(
-            FeedEntry(
-                title=f"{label} - {component_name}",
-                summary=summary,
-                updated=parse_date(str(component.get("updated_at") or page_updated_at)) or updated,
-                link="",
-            )
-        )
-    return entries
-
-
 def synthesize_status_entry(summary_payload: Dict[str, Any]) -> FeedEntry:
     page = summary_payload.get("page") or {}
     status = summary_payload.get("status") or {}
@@ -173,9 +152,6 @@ def parse_statuspage_entries(
     for maintenance in summary_payload.get("scheduled_maintenances") or []:
         entries.extend(maintenance_to_entries(maintenance))
 
-    page = summary_payload.get("page") or {}
-    entries.extend(degraded_component_entries(summary_payload.get("components") or [], str(page.get("updated_at") or "")))
-
     if not entries:
         entries.append(synthesize_status_entry(summary_payload))
 
@@ -183,10 +159,40 @@ def parse_statuspage_entries(
     return entries
 
 
+def parse_statuspage_components(summary_payload: Dict[str, Any]) -> List[ComponentSnapshot]:
+    page = summary_payload.get("page") or {}
+    page_url = str(page.get("url") or "")
+    components: List[ComponentSnapshot] = []
+    for item in summary_payload.get("components") or []:
+        if item.get("group"):
+            continue
+        name = str(item.get("name") or "").strip()
+        if not name:
+            continue
+        raw_status = str(item.get("status") or "unknown")
+        status, _ = normalize_component_status(raw_status)
+        label = status_label(raw_status)
+        details = f"Statuspage reports {name} as {label.lower()}."
+        components.append(
+            ComponentSnapshot(
+                name=name,
+                status=status,
+                label=label,
+                updated=parse_date(str(item.get("updated_at") or page.get("updated_at") or "")),
+                details=details,
+                link=page_url,
+            )
+        )
+    return components
+
+
 class StatuspageSourceAdapter:
-    def load(self, spec: SourceSpec) -> list[FeedEntry]:
+    def load(self, spec: SourceSpec) -> SourceSnapshot:
         base_url = normalize_statuspage_base(spec.url)
         recent_incidents = int(spec.options.get("recent_incidents", 10))
         summary_payload = fetch_statuspage_json(base_url, "summary.json")
         incidents_payload = fetch_statuspage_json(base_url, "incidents.json")
-        return parse_statuspage_entries(summary_payload, incidents_payload, recent_incidents=recent_incidents)
+        return SourceSnapshot(
+            entries=parse_statuspage_entries(summary_payload, incidents_payload, recent_incidents=recent_incidents),
+            components=parse_statuspage_components(summary_payload),
+        )

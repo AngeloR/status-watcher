@@ -69,9 +69,9 @@ class FetchReliabilityTests(unittest.TestCase):
         with patch("status_watcher.sources.feed.fetch_url", return_value=b"<broken xml"), patch(
             "status_watcher.sources.feed.load_cached_response", return_value=cached
         ), patch("status_watcher.sources.feed.store_cached_response"):
-            entries = FeedSourceAdapter().load(spec)
+            snapshot = FeedSourceAdapter().load(spec)
 
-        self.assertEqual(entries[0].title, "Operational")
+        self.assertEqual(snapshot.entries[0].title, "Operational")
 
     def test_statuspage_json_uses_cached_payload_when_fresh_response_is_malformed(self) -> None:
         cached = b'{"page": {"id": "abc"}}'
