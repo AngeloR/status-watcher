@@ -105,8 +105,9 @@ class ConfigTests(unittest.TestCase):
             [spec.name for spec in DEFAULT_SOURCE_SPECS],
             ["Claude", "OpenAI", "GitHub", "Cloudflare", "Azure"],
         )
-        self.assertEqual(DEFAULT_SOURCE_SPECS[-1].type, "feed")
-        self.assertEqual(DEFAULT_SOURCE_SPECS[-1].url, "https://status.azure.com/en-us/status/feed/")
+        self.assertEqual(DEFAULT_SOURCE_SPECS[-1].type, "html")
+        self.assertEqual(DEFAULT_SOURCE_SPECS[-1].url, "https://status.azure.com/en-us/status")
+        self.assertEqual(DEFAULT_SOURCE_SPECS[-1].options["selectors"], [".current-incident"])
 
 
 if __name__ == "__main__":

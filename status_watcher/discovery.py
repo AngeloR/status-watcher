@@ -42,6 +42,7 @@ JSON_DISCOVERY_TEMPLATES = [
 
 ENTRY_SELECTOR_CANDIDATES = [
     ".unresolved-incident",
+    ".current-incident",
     "[data-incident-id]",
     ".incident",
     "article.incident",

@@ -51,6 +51,15 @@ DEGRADED_TERMS = [
     "latency",
 ]
 
+NO_ISSUE_TERMS = [
+    "no active events",
+    "there are currently no active events",
+    "no current service availability issues",
+    "no known issues",
+    "all services are healthy",
+    "all services are up",
+]
+
 COMPONENT_STATUS_MAP = {
     "operational": ("operational", "Operational"),
     "none": ("operational", "Operational"),
@@ -214,8 +223,11 @@ def classify_entry(entry: FeedEntry) -> Dict[str, Any]:
         resolved = contains_any(resolution_text, RESOLVED_TERMS)
         active = contains_any(combined, ACTIVE_TERMS)
         degraded = contains_any(combined, DEGRADED_TERMS)
+        no_issue = contains_any(combined, NO_ISSUE_TERMS)
 
-        if resolved:
+        if no_issue and not active and not resolved:
+            state = "unknown"
+        elif resolved:
             state = "resolved"
         elif active:
             state = "issue"

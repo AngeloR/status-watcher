@@ -1,19 +1,21 @@
 [
   {
-    "name": "Claude",
-    "type": "statuspage",
-    "url": "https://status.claude.com"
+    "preset": "claude"
   },
   {
-    "name": "OpenAI",
-    "url": "https://status.openai.com/feed.atom"
+    "preset": "openai"
   },
   {
     "name": "GCP",
     "url": "https://status.cloud.google.com/en/feed.atom"
   },
   {
-    "name": "GitHub",
-    "url": "https://www.githubstatus.com/history.atom"
+    "preset": "github"
+  },
+  {
+    "preset": "cloudflare"
+  },
+  {
+    "preset": "azure"
   }
 ]

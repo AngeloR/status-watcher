@@ -42,6 +42,17 @@ class DomainTests(unittest.TestCase):
 
         self.assertEqual(classified["state"], "issue")
 
+    def test_no_active_events_wording_does_not_mark_entry_as_degraded(self) -> None:
+        entry = FeedEntry(
+            title="There are currently no active events",
+            summary="Use Azure Service Health to view other issues that may be impacting your services.",
+            updated=None,
+        )
+
+        classified = classify_entry(entry)
+
+        self.assertEqual(classified["state"], "unknown")
+
     def test_infer_service_status_keeps_multiple_live_incidents(self) -> None:
         now = dt.datetime(2026, 3, 25, 14, 33, tzinfo=dt.timezone.utc)
         entries = [

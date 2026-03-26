@@ -47,10 +47,13 @@ PRESETS: dict[str, SourcePreset] = {
     ),
     "azure": SourcePreset(
         key="azure",
-        description="Azure public regional status RSS feed.",
-        type="feed",
-        url="https://status.azure.com/en-us/status/feed/",
+        description="Azure public status page via the HTML adapter's current-incident block.",
+        type="html",
+        url="https://status.azure.com/en-us/status",
         name="Azure",
+        options={
+            "selectors": [".current-incident"],
+        },
     ),
     "vercel": SourcePreset(
         key="vercel",

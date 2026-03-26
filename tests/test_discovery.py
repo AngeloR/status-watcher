@@ -55,6 +55,27 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(result.spec.options["selectors"], [".incident"])
         self.assertEqual(result.spec.options["component_selectors"], ["[data-component-id]"])
 
+    def test_discovers_azure_html_page_and_compresses_to_preset(self) -> None:
+        payload = b"""
+        <html>
+          <body>
+            <table>
+              <tr class='current-incident'><td>There are currently no active events.</td></tr>
+            </table>
+          </body>
+        </html>
+        """
+
+        with patch("status_watcher.discovery.fetch_statuspage_json", side_effect=RuntimeError("not statuspage")), patch(
+            "status_watcher.discovery.fetch_url",
+            return_value=payload,
+        ):
+            result = discover_source("Azure", "https://status.azure.com/en-us/status")
+
+        self.assertEqual(result.spec.type, "html")
+        self.assertEqual(result.preset, "azure")
+        self.assertEqual(result.config_entry, {"preset": "azure"})
+
 
 if __name__ == "__main__":
     unittest.main()
