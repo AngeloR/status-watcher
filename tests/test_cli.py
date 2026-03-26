@@ -22,6 +22,7 @@ class CliTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         output = stdout.getvalue()
+        self.assertIn("azure", output)
         self.assertIn("claude", output)
         self.assertIn("github-json", output)
 

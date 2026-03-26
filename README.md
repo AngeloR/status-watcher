@@ -58,7 +58,7 @@ By default the app caches last-known-good source responses under `~/.status-watc
 
 ## Configuration
 
-By default the app loads `./feeds.json` when present. If that file does not exist, it falls back to built-in defaults.
+By default the app loads `./feeds.json` when present. If that file does not exist, it falls back to a built-in core set: Claude, OpenAI, GitHub, Cloudflare, and Azure.
 
 You can also pass an explicit config path:
 
@@ -150,6 +150,12 @@ Preset-based config is shorter and easier to maintain:
     "preset": "openai"
   },
   {
+    "preset": "cloudflare"
+  },
+  {
+    "preset": "azure"
+  },
+  {
     "preset": "github-json",
     "name": "GitHub Summary API"
   }
@@ -166,6 +172,7 @@ Presets provide default `name`, `type`, `url`, and adapter options. You can stil
 
 Current built-ins:
 
+- `azure`
 - `claude`
 - `claude-html`
 - `openai`

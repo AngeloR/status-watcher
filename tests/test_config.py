@@ -6,7 +6,7 @@ import unittest
 
 from pathlib import Path
 
-from status_watcher.config import load_source_specs_from_file
+from status_watcher.config import DEFAULT_SOURCE_SPECS, load_source_specs_from_file
 
 
 class ConfigTests(unittest.TestCase):
@@ -99,6 +99,14 @@ class ConfigTests(unittest.TestCase):
 
             with self.assertRaises(ValueError):
                 load_source_specs_from_file(str(path))
+
+    def test_default_source_specs_include_core_services(self) -> None:
+        self.assertEqual(
+            [spec.name for spec in DEFAULT_SOURCE_SPECS],
+            ["Claude", "OpenAI", "GitHub", "Cloudflare", "Azure"],
+        )
+        self.assertEqual(DEFAULT_SOURCE_SPECS[-1].type, "feed")
+        self.assertEqual(DEFAULT_SOURCE_SPECS[-1].url, "https://status.azure.com/en-us/status/feed/")
 
 
 if __name__ == "__main__":

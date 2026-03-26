@@ -6,6 +6,12 @@
     "preset": "openai"
   },
   {
+    "preset": "cloudflare"
+  },
+  {
+    "preset": "azure"
+  },
+  {
     "preset": "github-json",
     "name": "GitHub Summary API"
   },

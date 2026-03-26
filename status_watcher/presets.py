@@ -45,6 +45,13 @@ PRESETS: dict[str, SourcePreset] = {
         url="https://www.cloudflarestatus.com",
         name="Cloudflare",
     ),
+    "azure": SourcePreset(
+        key="azure",
+        description="Azure public regional status RSS feed.",
+        type="feed",
+        url="https://status.azure.com/en-us/status/feed/",
+        name="Azure",
+    ),
     "vercel": SourcePreset(
         key="vercel",
         description="Vercel public Statuspage feed with components and incidents.",

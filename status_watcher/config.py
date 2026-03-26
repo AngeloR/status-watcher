@@ -6,15 +6,15 @@ import os
 from typing import Any, Dict, List, Optional, Sequence
 
 from status_watcher.models import SourceSpec
-from status_watcher.presets import source_spec_from_definition
+from status_watcher.presets import source_spec_from_definition, source_spec_from_preset
 
 
 DEFAULT_SOURCE_SPECS = [
-    SourceSpec(
-        name="Claude",
-        type="statuspage",
-        url="https://status.claude.com",
-    ),
+    source_spec_from_preset("claude"),
+    source_spec_from_preset("openai"),
+    source_spec_from_preset("github"),
+    source_spec_from_preset("cloudflare"),
+    source_spec_from_preset("azure"),
 ]
 
 REFRESH_SECONDS = 120
