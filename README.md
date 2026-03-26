@@ -12,6 +12,7 @@
 - Configurable JSON/API adapter with nested field-path extraction for incidents and components
 - DOM-based HTML adapter with optional simple selectors for targeted status blocks
 - Built-in provider presets for common live status sources
+- Automatic source discovery from a simple `name + url` workflow
 - Persistent per-service change history across refreshes and restarts
 - Structured component tracking, impacted-component counts, and component-aware detail view
 - Headless `inspect` command for parser and preset debugging
@@ -69,6 +70,20 @@ List built-in presets:
 
 ```bash
 status-watcher presets
+```
+
+Discover a config entry from just a name and URL:
+
+```bash
+status-watcher discover Claude https://status.claude.com
+status-watcher discover GitHub https://www.githubstatus.com/api/v2/status.json --json
+```
+
+Add a discovered source directly into `feeds.json`:
+
+```bash
+status-watcher add Claude https://status.claude.com
+status-watcher add OpenAI https://status.openai.com path/to/feeds.json
 ```
 
 Inspect one configured source without launching the TUI:
@@ -160,6 +175,17 @@ Current built-ins:
 - `vercel`
 - `linear`
 
+### Discovery
+
+`discover` and `add` try a small probe pipeline so users do not need to hand-author adapter config for common cases:
+
+1. Statuspage API probe from the base URL
+2. Feed/XML parsing for direct Atom or RSS URLs
+3. JSON shape detection for a few common API layouts
+4. HTML fallback with inferred selectors when obvious incident/component blocks are present
+
+When the resolved source matches a built-in preset, the generated config is compressed down to a minimal preset entry.
+
 ### JSON source options
 
 The `json` adapter is config-driven. The most useful options are:
@@ -216,6 +242,8 @@ Try a preset or config entry headlessly:
 ```bash
 python3 -m status_watcher inspect --preset claude
 python3 -m status_watcher inspect GitHub feeds.json
+python3 -m status_watcher discover Claude https://status.claude.com
+python3 -m status_watcher add Claude https://status.claude.com /tmp/feeds.json
 ```
 
 ## Releases

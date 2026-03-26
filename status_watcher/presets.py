@@ -131,3 +131,16 @@ def source_spec_from_preset(
         item["url"] = url
     item.update(options or {})
     return source_spec_from_definition(item)
+
+
+def matching_preset_name(spec: SourceSpec) -> Optional[str]:
+    for preset in list_presets():
+        preset_spec = source_spec_from_preset(preset.key)
+        if preset_spec.type != spec.type:
+            continue
+        if preset_spec.url != spec.url:
+            continue
+        if preset_spec.options != spec.options:
+            continue
+        return preset.key
+    return None

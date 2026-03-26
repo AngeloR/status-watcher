@@ -6,9 +6,11 @@ import sys
 
 from dataclasses import asdict
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Iterable, Optional, Sequence
 
-from status_watcher.config import load_source_specs_from_file, resolve_source_specs
+from status_watcher.config import DEFAULT_FEEDS_PATH, load_source_specs_from_file, resolve_source_specs
+from status_watcher.discovery import DiscoveryResult, discover_source, upsert_config_entry
 from status_watcher.domain import infer_service_status
 from status_watcher.models import ComponentSnapshot, FeedEntry, IncidentSnapshot, ServiceStatus, SourceSpec
 from status_watcher.presets import list_presets, source_spec_from_preset
@@ -21,6 +23,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return inspect_main(args[1:])
     if args and args[0] == "presets":
         return presets_main()
+    if args and args[0] == "discover":
+        return discover_main(args[1:])
+    if args and args[0] == "add":
+        return add_main(args[1:])
     from status_watcher.app import run_dashboard
 
     return run_dashboard(args)
@@ -34,6 +40,16 @@ def build_inspect_parser() -> argparse.ArgumentParser:
     parser.add_argument("--preset")
     parser.add_argument("--name")
     parser.add_argument("--url")
+    parser.add_argument("--json", action="store_true", dest="as_json")
+    return parser
+
+
+def build_discover_parser(prog: str) -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog=prog)
+    parser.add_argument("name")
+    parser.add_argument("url")
+    parser.add_argument("config_path", nargs="?")
+    parser.add_argument("--config", dest="config_override")
     parser.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
@@ -55,6 +71,55 @@ def inspect_main(argv: Sequence[str]) -> int:
         return 0
 
     print(render_inspection(spec, status))
+    return 0
+
+
+def discover_main(argv: Sequence[str]) -> int:
+    parser = build_discover_parser("status-watcher discover")
+    args = parser.parse_args(list(argv))
+
+    try:
+        result = discover_source(args.name, args.url)
+    except Exception as exc:
+        print(f"discover failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 1
+
+    if args.as_json:
+        print(json.dumps(serialize_discovery(result), indent=2))
+        return 0
+
+    print(render_discovery(result))
+    return 0
+
+
+def add_main(argv: Sequence[str]) -> int:
+    parser = build_discover_parser("status-watcher add")
+    args = parser.parse_args(list(argv))
+
+    try:
+        result = discover_source(args.name, args.url)
+        config_path = args.config_override or args.config_path or DEFAULT_FEEDS_PATH
+        entries, updated = upsert_config_entry(config_path, result)
+        target = Path(config_path)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(entries, indent=2) + "\n", encoding="utf-8")
+    except Exception as exc:
+        print(f"add failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 1
+
+    payload = {
+        "path": str(Path(config_path)),
+        "updated": updated,
+        "discovery": serialize_discovery(result),
+    }
+
+    if args.as_json:
+        print(json.dumps(payload, indent=2))
+        return 0
+
+    action = "Updated" if updated else "Added"
+    print(f"{action} {result.spec.name} in {config_path}")
+    print(render_discovery(result))
     return 0
 
 
@@ -125,6 +190,20 @@ def render_inspection(spec: SourceSpec, status: ServiceStatus) -> str:
     return "\n".join(lines)
 
 
+def render_discovery(result: DiscoveryResult) -> str:
+    lines = [
+        f"Detected: {result.spec.type}",
+        f"Name: {result.spec.name}",
+        f"URL: {result.spec.url}",
+        f"Method: {result.detection}",
+    ]
+    if result.preset is not None:
+        lines.append(f"Preset: {result.preset}")
+    lines.append("Config:")
+    lines.append(json.dumps(result.config_entry, indent=2))
+    return "\n".join(lines)
+
+
 def render_entries(entries: Iterable[FeedEntry]) -> list[str]:
     lines: list[str] = []
     for entry in entries:
@@ -169,6 +248,17 @@ def serialize_inspection(spec: SourceSpec, status: ServiceStatus) -> dict[str, A
     data = asdict(status)
     data["spec"] = asdict(spec)
     return normalize_json(data)
+
+
+def serialize_discovery(result: DiscoveryResult) -> dict[str, Any]:
+    return normalize_json(
+        {
+            "spec": asdict(result.spec),
+            "config_entry": result.config_entry,
+            "detection": result.detection,
+            "preset": result.preset,
+        }
+    )
 
 
 def normalize_json(value: Any) -> Any:
