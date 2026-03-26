@@ -89,7 +89,7 @@ def refresh_statuses(source_specs, history_store: HistoryStore):
     return history_store.apply(load_all(source_specs))
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def run_dashboard(argv: Optional[Sequence[str]] = None) -> int:
     source_specs = resolve_source_specs(argv)
     console = Console()
     keyboard = KeyboardReader()
@@ -138,3 +138,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         keyboard.stop()
 
     return 0
+
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    return run_dashboard(argv)

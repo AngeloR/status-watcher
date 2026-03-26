@@ -70,6 +70,36 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(specs[0].options["entries_path"], "data.events[]")
         self.assertEqual(specs[0].options["components_path"], "data.components[]")
 
+    def test_preset_config_can_supply_defaults_and_merge_options(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "feeds.json"
+            path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "preset": "github",
+                            "recent_incidents": 5,
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            specs = load_source_specs_from_file(str(path))
+
+        self.assertEqual(specs[0].name, "GitHub")
+        self.assertEqual(specs[0].type, "statuspage")
+        self.assertEqual(specs[0].url, "https://www.githubstatus.com")
+        self.assertEqual(specs[0].options["recent_incidents"], 5)
+
+    def test_unknown_preset_raises_value_error(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "feeds.json"
+            path.write_text(json.dumps([{"preset": "missing"}]), encoding="utf-8")
+
+            with self.assertRaises(ValueError):
+                load_source_specs_from_file(str(path))
+
 
 if __name__ == "__main__":
     unittest.main()

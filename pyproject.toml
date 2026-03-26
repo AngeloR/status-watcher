@@ -33,7 +33,7 @@ dependencies = [
 dev = []
 
 [project.scripts]
-status-watcher = "status_watcher.app:main"
+status-watcher = "status_watcher.cli:main"
 
 [tool.setuptools]
 packages = ["status_watcher", "status_watcher.sources"]

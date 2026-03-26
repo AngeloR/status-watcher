@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import sys
 
-from status_watcher.app import main
+from status_watcher.cli import main
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ import os
 from typing import Any, Dict, List, Optional, Sequence
 
 from status_watcher.models import SourceSpec
+from status_watcher.presets import source_spec_from_definition
 
 
 DEFAULT_SOURCE_SPECS = [
@@ -43,23 +44,9 @@ def load_source_specs_from_file(path: str) -> List[SourceSpec]:
 
     specs: List[SourceSpec] = []
     for item in data:
-        if not isinstance(item, dict) or "name" not in item or "url" not in item:
-            raise ValueError("Each feed must contain 'name' and 'url'")
-
-        source_type = str(item.get("type", "feed"))
-        options: Dict[str, Any] = {}
-        for key, value in item.items():
-            if key not in {"name", "type", "url"}:
-                options[key] = value
-
-        specs.append(
-            SourceSpec(
-                name=str(item["name"]),
-                type=source_type,
-                url=str(item["url"]),
-                options=options,
-            )
-        )
+        if not isinstance(item, dict):
+            raise ValueError("Each feed must be a JSON object")
+        specs.append(source_spec_from_definition(item))
     return specs
 
 

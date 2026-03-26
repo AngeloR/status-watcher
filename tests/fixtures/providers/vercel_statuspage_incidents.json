@@ -1,0 +1,1378 @@
+{
+  "page": {
+    "id": "lvglq8h0mdyh",
+    "name": "Vercel",
+    "url": "https://www.vercel-status.com",
+    "time_zone": "Etc/UTC",
+    "updated_at": "2026-03-26T13:38:46.329Z"
+  },
+  "incidents": [
+    {
+      "id": "dqhgwhqy8rcm",
+      "name": "Elevated Dashboard Errors",
+      "status": "resolved",
+      "created_at": "2026-03-25T16:32:01.875Z",
+      "updated_at": "2026-03-25T17:31:26.525Z",
+      "monitoring_at": "2026-03-25T16:41:39.249Z",
+      "resolved_at": "2026-03-25T17:31:26.508Z",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/0x3myt2tpynq",
+      "started_at": "2026-03-25T16:32:01.863Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "kj2z30lh6rys",
+          "status": "resolved",
+          "body": "This incident has been resolved.",
+          "incident_id": "dqhgwhqy8rcm",
+          "created_at": "2026-03-25T17:31:26.508Z",
+          "updated_at": "2026-03-25T17:31:26.508Z",
+          "display_at": "2026-03-25T17:31:26.508Z",
+          "affected_components": [
+            {
+              "code": "rxynwj392p81",
+              "name": "API",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            },
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "vb437mbmdb0m",
+          "status": "monitoring",
+          "body": "A fix has been implemented and we are monitoring the results.",
+          "incident_id": "dqhgwhqy8rcm",
+          "created_at": "2026-03-25T16:41:39.249Z",
+          "updated_at": "2026-03-25T16:41:39.249Z",
+          "display_at": "2026-03-25T16:41:39.249Z",
+          "affected_components": [
+            {
+              "code": "rxynwj392p81",
+              "name": "API",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "05104k1jwct9",
+          "status": "investigating",
+          "body": "We are currently investigating reports of elevated error rates on the Vercel Dashboard. Existing deployments and live traffic are not affected by this issue. We will share updates as they become available.",
+          "incident_id": "dqhgwhqy8rcm",
+          "created_at": "2026-03-25T16:32:01.986Z",
+          "updated_at": "2026-03-25T16:32:01.986Z",
+          "display_at": "2026-03-25T16:32:01.986Z",
+          "affected_components": [
+            {
+              "code": "rxynwj392p81",
+              "name": "API",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "fk66q26xp7hh",
+          "name": "Dashboard",
+          "status": "operational",
+          "created_at": "2020-04-21T16:08:01.695Z",
+          "updated_at": "2026-03-25T17:31:26.446Z",
+          "position": 1,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": "gyymyc4bc36j",
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        },
+        {
+          "id": "7ckq6xr6nsbv",
+          "name": "Builds",
+          "status": "operational",
+          "created_at": "2020-04-22T16:48:44.914Z",
+          "updated_at": "2026-03-25T17:31:26.462Z",
+          "position": 1,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": "47ltvgp4g9fb",
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        },
+        {
+          "id": "rxynwj392p81",
+          "name": "API",
+          "status": "operational",
+          "created_at": "2020-04-21T16:08:01.662Z",
+          "updated_at": "2026-03-25T17:31:26.474Z",
+          "position": 2,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    },
+    {
+      "id": "wlpkbhxlkxqf",
+      "name": "Elevated Errors Loading Deployments on Dashboard",
+      "status": "resolved",
+      "created_at": "2026-03-24T15:19:45.882Z",
+      "updated_at": "2026-03-24T16:31:02.890Z",
+      "monitoring_at": "2026-03-24T16:14:40.053Z",
+      "resolved_at": "2026-03-24T16:31:02.875Z",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/d6hjcnlnk09d",
+      "started_at": "2026-03-24T15:19:45.870Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "0fzg6n31x8k9",
+          "status": "resolved",
+          "body": "This incident has been resolved.",
+          "incident_id": "wlpkbhxlkxqf",
+          "created_at": "2026-03-24T16:31:02.875Z",
+          "updated_at": "2026-03-24T16:31:02.875Z",
+          "display_at": "2026-03-24T16:31:02.875Z",
+          "affected_components": [
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "operational",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "mmwvtt4mj059",
+          "status": "monitoring",
+          "body": "A fix has been implemented and we are monitoring the results.",
+          "incident_id": "wlpkbhxlkxqf",
+          "created_at": "2026-03-24T16:14:40.053Z",
+          "updated_at": "2026-03-24T16:14:40.053Z",
+          "display_at": "2026-03-24T16:14:40.053Z",
+          "affected_components": [
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "x8w76b7wv8rf",
+          "status": "investigating",
+          "body": "We are currently investigating reports of elevated error rates loading the Deployment Overview on the Vercel Dashboard. Existing deployments and live traffic are not affected by this issue. We will share updates as they become available.",
+          "incident_id": "wlpkbhxlkxqf",
+          "created_at": "2026-03-24T15:19:45.960Z",
+          "updated_at": "2026-03-24T15:19:45.960Z",
+          "display_at": "2026-03-24T15:19:45.960Z",
+          "affected_components": [
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": false,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "fk66q26xp7hh",
+          "name": "Dashboard",
+          "status": "operational",
+          "created_at": "2020-04-21T16:08:01.695Z",
+          "updated_at": "2026-03-25T17:31:26.446Z",
+          "position": 1,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": "gyymyc4bc36j",
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    },
+    {
+      "id": "p1n63rfd8yvm",
+      "name": "Elevated errors creating Vercel Functions in sin1 (Singapore)",
+      "status": "resolved",
+      "created_at": "2026-03-24T03:43:08.175Z",
+      "updated_at": "2026-03-24T05:01:18.448Z",
+      "monitoring_at": "2026-03-24T04:40:22.478Z",
+      "resolved_at": "2026-03-24T05:01:18.422Z",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/0zq9zpny4l50",
+      "started_at": "2026-03-24T03:43:08.165Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "nbt0vj7qnywk",
+          "status": "resolved",
+          "body": "This incident has been resolved.",
+          "incident_id": "p1n63rfd8yvm",
+          "created_at": "2026-03-24T05:01:18.422Z",
+          "updated_at": "2026-03-24T05:01:18.422Z",
+          "display_at": "2026-03-24T05:01:18.422Z",
+          "affected_components": [
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "operational",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "pg2ql1jz59qm",
+          "status": "monitoring",
+          "body": "A fix has been implemented and we are monitoring the results.",
+          "incident_id": "p1n63rfd8yvm",
+          "created_at": "2026-03-24T04:40:22.478Z",
+          "updated_at": "2026-03-24T04:40:22.478Z",
+          "display_at": "2026-03-24T04:40:22.478Z",
+          "affected_components": [
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "partial_outage",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "1bby179f4772",
+          "status": "identified",
+          "body": "We are observing elevated errors creating Vercel Functions in the `sin1` region. To mitigate errors creating deployments, we have temporarily disabled provisioning new Vercel Functions in this region. Existing deployments and live traffic are not affected by this issue. We will share updates as they become available.",
+          "incident_id": "p1n63rfd8yvm",
+          "created_at": "2026-03-24T03:43:08.261Z",
+          "updated_at": "2026-03-24T03:43:08.261Z",
+          "display_at": "2026-03-24T03:43:08.261Z",
+          "affected_components": [
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "operational",
+              "new_status": "partial_outage"
+            }
+          ],
+          "deliver_notifications": false,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "7ckq6xr6nsbv",
+          "name": "Builds",
+          "status": "operational",
+          "created_at": "2020-04-22T16:48:44.914Z",
+          "updated_at": "2026-03-25T17:31:26.462Z",
+          "position": 1,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": "47ltvgp4g9fb",
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    },
+    {
+      "id": "20v5r3njkcwc",
+      "name": "Dubai region (dxb1) is unavailable and traffic is being re-routed",
+      "status": "resolved",
+      "created_at": "2026-03-02T15:29:37.000Z",
+      "updated_at": "2026-03-16T18:50:30.122Z",
+      "monitoring_at": "2026-03-02T18:23:53.540Z",
+      "resolved_at": "2026-03-16T18:44:04.000Z",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/zlddb1nrtlgw",
+      "started_at": "2026-03-02T15:29:37.000Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "f5jf2hmr5dc5",
+          "status": "resolved",
+          "body": "Due to ongoing issues in the dxb1 region, traffic and regional Vercel services are currently re-routed to bom1. We will share more details on recovery when they become available.",
+          "incident_id": "20v5r3njkcwc",
+          "created_at": "2026-03-16T18:44:04.404Z",
+          "updated_at": "2026-03-16T18:50:30.105Z",
+          "display_at": "2026-03-16T18:44:04.000Z",
+          "affected_components": [
+            {
+              "code": "xqxqkh85qkqn",
+              "name": "Edge Network - DXB1 - Dubai, UAE",
+              "old_status": "major_outage",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "7b4nhpkc3d06",
+          "status": "monitoring",
+          "body": "We are monitoring the situation and continue to work toward restoring capacity in the dxb1 region. We will send further updates when new information is available.",
+          "incident_id": "20v5r3njkcwc",
+          "created_at": "2026-03-02T18:23:53.540Z",
+          "updated_at": "2026-03-02T18:23:53.540Z",
+          "display_at": "2026-03-02T18:23:53.540Z",
+          "affected_components": [
+            {
+              "code": "xqxqkh85qkqn",
+              "name": "Edge Network - DXB1 - Dubai, UAE",
+              "old_status": "major_outage",
+              "new_status": "major_outage"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "c3dbph0sb13v",
+          "status": "identified",
+          "body": "Due to operational issues in the dxb1 region, traffic is currently re-routed to bom1. Additionally, dxb1 is currently unavailable as a Function Region for new deployments.\n\nIf your existing deployments that use the dxb1 region are experiencing elevated function invocation errors, we strongly recommend switching to the nearest region (such as bom1) and redeploy until capacity is restored in dxb1. Deployments using multiple regions or failover regions are not affected since traffic is automatically routed to the nearest region based on the configured settings.",
+          "incident_id": "20v5r3njkcwc",
+          "created_at": "2026-03-02T15:29:37.618Z",
+          "updated_at": "2026-03-02T18:04:54.898Z",
+          "display_at": "2026-03-02T15:29:37.000Z",
+          "affected_components": [
+            {
+              "code": "xqxqkh85qkqn",
+              "name": "Edge Network - DXB1 - Dubai, UAE",
+              "old_status": "operational",
+              "new_status": "major_outage"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "xqxqkh85qkqn",
+          "name": "DXB1 - Dubai, UAE",
+          "status": "operational",
+          "created_at": "2026-03-02T15:28:32.989Z",
+          "updated_at": "2026-03-24T04:41:55.795Z",
+          "position": 7,
+          "description": null,
+          "showcase": true,
+          "start_date": "2025-07-01",
+          "group_id": "j7g76bfzc8hw",
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    },
+    {
+      "id": "85wwyvtyqs91",
+      "name": "Elevated Build Errors",
+      "status": "resolved",
+      "created_at": "2026-03-13T22:32:52.317Z",
+      "updated_at": "2026-03-13T23:15:00.391Z",
+      "monitoring_at": "2026-03-13T22:53:59.190Z",
+      "resolved_at": "2026-03-13T23:15:00.374Z",
+      "impact": "major",
+      "shortlink": "https://stspg.io/d055j8vzkkm9",
+      "started_at": "2026-03-13T22:32:52.309Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "rzq67rgrw2f7",
+          "status": "resolved",
+          "body": "This incident has been resolved.",
+          "incident_id": "85wwyvtyqs91",
+          "created_at": "2026-03-13T23:15:00.374Z",
+          "updated_at": "2026-03-13T23:15:00.374Z",
+          "display_at": "2026-03-13T23:15:00.374Z",
+          "affected_components": [
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "operational",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "6tj5hjyjtsjh",
+          "status": "monitoring",
+          "body": "A fix has been implemented and we are monitoring the results.",
+          "incident_id": "85wwyvtyqs91",
+          "created_at": "2026-03-13T22:53:59.190Z",
+          "updated_at": "2026-03-13T22:53:59.190Z",
+          "display_at": "2026-03-13T22:53:59.190Z",
+          "affected_components": [
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "partial_outage",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "m7m4dcqvr8r1",
+          "status": "investigating",
+          "body": "We are currently investigating elevated error reports of deployment creation during the build phase. Existing deployments and live traffic are not affected by this issue. We will share updates as they become available.",
+          "incident_id": "85wwyvtyqs91",
+          "created_at": "2026-03-13T22:32:52.401Z",
+          "updated_at": "2026-03-13T22:32:52.401Z",
+          "display_at": "2026-03-13T22:32:52.401Z",
+          "affected_components": [
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "operational",
+              "new_status": "partial_outage"
+            }
+          ],
+          "deliver_notifications": false,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "7ckq6xr6nsbv",
+          "name": "Builds",
+          "status": "operational",
+          "created_at": "2020-04-22T16:48:44.914Z",
+          "updated_at": "2026-03-25T17:31:26.462Z",
+          "position": 1,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": "47ltvgp4g9fb",
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    },
+    {
+      "id": "4wsjq8gn2tsk",
+      "name": "Elevated GitHub Deployment Failures",
+      "status": "resolved",
+      "created_at": "2026-03-11T16:00:00.000Z",
+      "updated_at": "2026-03-12T06:18:03.956Z",
+      "monitoring_at": null,
+      "resolved_at": "2026-03-12T01:15:00.000Z",
+      "impact": "none",
+      "shortlink": "https://stspg.io/ynsg4nb6fhcc",
+      "started_at": "2026-03-12T01:15:00.000Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "844bb0fmvnc5",
+          "status": "resolved",
+          "body": "Between 01:15 and 05:45 UTC, customers might have experienced elevated GitHub deployment failures, including delays in triggering new deployments for commits and redeploy errors displaying the message \"There is no GitHub account connected to this Vercel account\". This was due to GitHub API degradations, which they have since resolved.\n\nhttps://www.githubstatus.com/incidents/lw6j95nyw3py\nhttps://www.githubstatus.com/incidents/02z04m335tvv",
+          "incident_id": "4wsjq8gn2tsk",
+          "created_at": "2026-03-12T06:17:13.803Z",
+          "updated_at": "2026-03-12T06:18:03.882Z",
+          "display_at": "2026-03-12T01:15:00.000Z",
+          "affected_components": null,
+          "deliver_notifications": false,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [],
+      "reminder_intervals": null
+    },
+    {
+      "id": "963t8qqbk77b",
+      "name": "Elevated Errors on Middleware Invocations",
+      "status": "resolved",
+      "created_at": "2026-03-06T15:25:59.000Z",
+      "updated_at": "2026-03-06T21:38:34.870Z",
+      "monitoring_at": "2026-03-06T21:20:30.683Z",
+      "resolved_at": "2026-03-06T21:38:34.851Z",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/prrffrz7knb6",
+      "started_at": "2026-03-06T15:25:59.000Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "rh45qw23v87w",
+          "status": "resolved",
+          "body": "This incident has been resolved.",
+          "incident_id": "963t8qqbk77b",
+          "created_at": "2026-03-06T21:38:34.851Z",
+          "updated_at": "2026-03-06T21:38:34.851Z",
+          "display_at": "2026-03-06T21:38:34.851Z",
+          "affected_components": [
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "z48pmlcl5p4s",
+          "status": "monitoring",
+          "body": "A fix has been applied and we are seeing recovery for affected deployments. We are continuing to monitor.",
+          "incident_id": "963t8qqbk77b",
+          "created_at": "2026-03-06T21:20:30.683Z",
+          "updated_at": "2026-03-06T21:20:30.683Z",
+          "display_at": "2026-03-06T21:20:30.683Z",
+          "affected_components": [
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "j9998d79h6zg",
+          "status": "identified",
+          "body": "We are applying a fix for the deployments experiencing elevated errors.\n\nWe continue to recommend redeploying if you are seeing errors on deployments created between 11:20 UTC and 15:14 UTC. Deployments created outside of this window are unaffected and no action is required. Additionally, deployments with middleware on the Node runtime are unaffected.",
+          "incident_id": "963t8qqbk77b",
+          "created_at": "2026-03-06T19:18:02.130Z",
+          "updated_at": "2026-03-06T19:18:44.782Z",
+          "display_at": "2026-03-06T19:18:02.000Z",
+          "affected_components": [
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "x6pq39cn3x7r",
+          "status": "identified",
+          "body": "Some deployments created between 11:20 UTC and 15:14 UTC with Edge Middleware may be seeing elevated errors. Deployments created outside of this time window are unaffected. If you are experiencing issues, we recommend redeploying.",
+          "incident_id": "963t8qqbk77b",
+          "created_at": "2026-03-06T15:25:59.315Z",
+          "updated_at": "2026-03-06T15:36:19.349Z",
+          "display_at": "2026-03-06T15:25:59.000Z",
+          "affected_components": [
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "1w4lc3s3q2pz",
+          "name": "Edge Middleware",
+          "status": "operational",
+          "created_at": "2021-12-17T09:32:22.097Z",
+          "updated_at": "2026-03-06T21:38:34.809Z",
+          "position": 12,
+          "description": null,
+          "showcase": true,
+          "start_date": "2021-12-17",
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    },
+    {
+      "id": "4sn7csnxsgrj",
+      "name": "Elevated Latency on Queue Messages, Increased Message Retry Latency in iad1",
+      "status": "resolved",
+      "created_at": "2026-03-06T20:53:06.983Z",
+      "updated_at": "2026-03-06T21:22:01.326Z",
+      "monitoring_at": "2026-03-06T21:10:51.669Z",
+      "resolved_at": "2026-03-06T21:22:01.313Z",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/0cwtby9cr3zz",
+      "started_at": "2026-03-06T20:53:06.978Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "4vsypbst7l09",
+          "status": "resolved",
+          "body": "This incident has been resolved.",
+          "incident_id": "4sn7csnxsgrj",
+          "created_at": "2026-03-06T21:22:01.313Z",
+          "updated_at": "2026-03-06T21:22:01.313Z",
+          "display_at": "2026-03-06T21:22:01.313Z",
+          "affected_components": [
+            {
+              "code": "y0nl08tmsz12",
+              "name": "Queues",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            },
+            {
+              "code": "c3yjhlfbv34z",
+              "name": "Workflow",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "8cz2rggklgtb",
+          "status": "monitoring",
+          "body": "A fix has been implemented and we are monitoring the results.",
+          "incident_id": "4sn7csnxsgrj",
+          "created_at": "2026-03-06T21:10:51.669Z",
+          "updated_at": "2026-03-06T21:10:51.669Z",
+          "display_at": "2026-03-06T21:10:51.669Z",
+          "affected_components": [
+            {
+              "code": "y0nl08tmsz12",
+              "name": "Queues",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "c3yjhlfbv34z",
+              "name": "Workflow",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "ppl7j1wmc6tn",
+          "status": "identified",
+          "body": "The issue has been identified and a fix is being implemented.",
+          "incident_id": "4sn7csnxsgrj",
+          "created_at": "2026-03-06T21:00:18.965Z",
+          "updated_at": "2026-03-06T21:00:18.965Z",
+          "display_at": "2026-03-06T21:00:18.965Z",
+          "affected_components": [
+            {
+              "code": "y0nl08tmsz12",
+              "name": "Queues",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "c3yjhlfbv34z",
+              "name": "Workflow",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "hn1z5mwjb2pb",
+          "status": "investigating",
+          "body": "We are investigating reports of elevated queue message latency and message retry latency in iad1, as well as elevated sleep times and increased step retries in Workflow. We will provide additional updates as they become available.",
+          "incident_id": "4sn7csnxsgrj",
+          "created_at": "2026-03-06T20:53:07.067Z",
+          "updated_at": "2026-03-06T20:53:07.067Z",
+          "display_at": "2026-03-06T20:53:07.067Z",
+          "affected_components": [
+            {
+              "code": "y0nl08tmsz12",
+              "name": "Queues",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "c3yjhlfbv34z",
+              "name": "Workflow",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "y0nl08tmsz12",
+          "name": "Queues",
+          "status": "operational",
+          "created_at": "2026-03-06T20:43:12.390Z",
+          "updated_at": "2026-03-06T21:22:01.275Z",
+          "position": 29,
+          "description": null,
+          "showcase": true,
+          "start_date": "2026-03-06",
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        },
+        {
+          "id": "c3yjhlfbv34z",
+          "name": "Workflow",
+          "status": "operational",
+          "created_at": "2026-03-06T20:44:24.003Z",
+          "updated_at": "2026-03-06T21:22:01.288Z",
+          "position": 30,
+          "description": null,
+          "showcase": true,
+          "start_date": "2026-03-06",
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    },
+    {
+      "id": "80qvc1mrnr8f",
+      "name": "Delays Loading Observability, Usage, Analytics, and Speed Insights Data",
+      "status": "resolved",
+      "created_at": "2026-03-03T17:10:19.000Z",
+      "updated_at": "2026-03-03T21:10:27.074Z",
+      "monitoring_at": "2026-03-03T19:14:59.105Z",
+      "resolved_at": "2026-03-03T21:10:27.055Z",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/5nl125t7byw4",
+      "started_at": "2026-03-03T17:10:19.000Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "306npz83p91t",
+          "status": "resolved",
+          "body": "This incident has been resolved.",
+          "incident_id": "80qvc1mrnr8f",
+          "created_at": "2026-03-03T21:10:27.055Z",
+          "updated_at": "2026-03-03T21:10:27.055Z",
+          "display_at": "2026-03-03T21:10:27.055Z",
+          "affected_components": [
+            {
+              "code": "kscyjm1qp3cw",
+              "name": "Speed Insights",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            },
+            {
+              "code": "zr2j7y9kv5hd",
+              "name": "Web Analytics",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            },
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "v76r9bp96143",
+          "status": "monitoring",
+          "body": "A fix has been implemented and we are seeing recovery for data loading and ingestion across services. We are continuing to monitor and will provide additional updates as they become available.",
+          "incident_id": "80qvc1mrnr8f",
+          "created_at": "2026-03-03T19:14:59.105Z",
+          "updated_at": "2026-03-03T19:14:59.105Z",
+          "display_at": "2026-03-03T19:14:59.105Z",
+          "affected_components": [
+            {
+              "code": "kscyjm1qp3cw",
+              "name": "Speed Insights",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "zr2j7y9kv5hd",
+              "name": "Web Analytics",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "lcydpc362rvw",
+          "status": "investigating",
+          "body": "Dashboard pages that use Observability data, including Observability, Speed Insights, Web Analytics, Usage, Firewall, and Activity, are experiencing delays while loading data. These pages are also experiencing delays ingesting new data. We are investigating this issue and will provide additional updates as they become available.",
+          "incident_id": "80qvc1mrnr8f",
+          "created_at": "2026-03-03T17:10:19.249Z",
+          "updated_at": "2026-03-03T17:50:37.617Z",
+          "display_at": "2026-03-03T17:10:19.000Z",
+          "affected_components": [
+            {
+              "code": "kscyjm1qp3cw",
+              "name": "Speed Insights",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "zr2j7y9kv5hd",
+              "name": "Web Analytics",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "fk66q26xp7hh",
+              "name": "Dashboard - Dashboard",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "fk66q26xp7hh",
+          "name": "Dashboard",
+          "status": "operational",
+          "created_at": "2020-04-21T16:08:01.695Z",
+          "updated_at": "2026-03-25T17:31:26.446Z",
+          "position": 1,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": "gyymyc4bc36j",
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        },
+        {
+          "id": "kscyjm1qp3cw",
+          "name": "Speed Insights",
+          "status": "operational",
+          "created_at": "2023-01-11T16:04:10.742Z",
+          "updated_at": "2026-03-03T21:10:26.996Z",
+          "position": 24,
+          "description": null,
+          "showcase": true,
+          "start_date": "2023-01-11",
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        },
+        {
+          "id": "zr2j7y9kv5hd",
+          "name": "Web Analytics",
+          "status": "operational",
+          "created_at": "2023-06-20T08:12:15.102Z",
+          "updated_at": "2026-03-03T21:10:27.014Z",
+          "position": 28,
+          "description": null,
+          "showcase": true,
+          "start_date": "2023-06-20",
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    },
+    {
+      "id": "nt2llc4k0p41",
+      "name": "Elevated deployment and function invocations failures",
+      "status": "resolved",
+      "created_at": "2026-03-02T06:06:28.000Z",
+      "updated_at": "2026-03-02T15:20:31.151Z",
+      "monitoring_at": "2026-03-02T14:59:44.543Z",
+      "resolved_at": "2026-03-02T15:20:31.134Z",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/2dfvhs9ymqym",
+      "started_at": "2026-03-02T06:06:28.000Z",
+      "page_id": "lvglq8h0mdyh",
+      "incident_updates": [
+        {
+          "id": "6fkm9y0dydqp",
+          "status": "resolved",
+          "body": "This incident has been resolved.",
+          "incident_id": "nt2llc4k0p41",
+          "created_at": "2026-03-02T15:20:31.134Z",
+          "updated_at": "2026-03-02T15:20:31.134Z",
+          "display_at": "2026-03-02T15:20:31.134Z",
+          "affected_components": [
+            {
+              "code": "kgcsn9c73xzf",
+              "name": "Serverless Functions",
+              "old_status": "operational",
+              "new_status": "operational"
+            },
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "operational",
+              "new_status": "operational"
+            },
+            {
+              "code": "pdnc30nkdqth",
+              "name": "Edge Functions",
+              "old_status": "operational",
+              "new_status": "operational"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "operational",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "h8hxx3jj1rwy",
+          "status": "monitoring",
+          "body": "We have rolled out a second mitigation for elevated Build errors and are seeing recovery. All builds are now excluding the Dubai region (dxb1) from their deployment targets as a temporary measure. We will provide additional updates as they become available.",
+          "incident_id": "nt2llc4k0p41",
+          "created_at": "2026-03-02T14:59:44.543Z",
+          "updated_at": "2026-03-02T14:59:44.543Z",
+          "display_at": "2026-03-02T14:59:44.543Z",
+          "affected_components": [
+            {
+              "code": "kgcsn9c73xzf",
+              "name": "Serverless Functions",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            },
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            },
+            {
+              "code": "pdnc30nkdqth",
+              "name": "Edge Functions",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "degraded_performance",
+              "new_status": "operational"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "49v1nzvrzw88",
+          "status": "identified",
+          "body": "We have rolled out a first mitigation for elevated Build errors. Builds that use Middleware are now excluding the Dubai region (dxb1) from their deployment targets as a temporary measure, and should complete successfully again. We are now working on a mitigation for Builds that are using Edge Functions.",
+          "incident_id": "nt2llc4k0p41",
+          "created_at": "2026-03-02T13:00:15.134Z",
+          "updated_at": "2026-03-02T13:00:15.134Z",
+          "display_at": "2026-03-02T13:00:15.134Z",
+          "affected_components": [
+            {
+              "code": "kgcsn9c73xzf",
+              "name": "Serverless Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "pdnc30nkdqth",
+              "name": "Edge Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "c6x7fvm2xrxv",
+          "status": "identified",
+          "body": "We are currently deploying a mitigation for elevated Build errors. Builds that use Middleware or Edge Functions will exclude the Dubai region (dxb1) from their deployment targets as a temporary measure. We will provide additional updates as they become available.",
+          "incident_id": "nt2llc4k0p41",
+          "created_at": "2026-03-02T11:59:55.185Z",
+          "updated_at": "2026-03-02T12:00:17.460Z",
+          "display_at": "2026-03-02T11:59:55.000Z",
+          "affected_components": [
+            {
+              "code": "kgcsn9c73xzf",
+              "name": "Serverless Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "pdnc30nkdqth",
+              "name": "Edge Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "krnxx4224xvw",
+          "status": "identified",
+          "body": "We are still seeing elevated errors in Builds in all regions, because Middleware and Edge Functions may be deployed globally. Builds that don't use Middleware and Edge Functions are not impacted. We are continuing to work on a fix for this issue.",
+          "incident_id": "nt2llc4k0p41",
+          "created_at": "2026-03-02T10:50:17.548Z",
+          "updated_at": "2026-03-02T10:50:17.548Z",
+          "display_at": "2026-03-02T10:50:17.548Z",
+          "affected_components": [
+            {
+              "code": "kgcsn9c73xzf",
+              "name": "Serverless Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "pdnc30nkdqth",
+              "name": "Edge Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "1rsmt7720f9g",
+          "status": "identified",
+          "body": "The dxb1 Edge traffic is currently being rerouted to the nearest Edge region (bom1) to mitigate the impact. We will provide additional updates as they become available.",
+          "incident_id": "nt2llc4k0p41",
+          "created_at": "2026-03-02T07:56:57.951Z",
+          "updated_at": "2026-03-02T12:06:03.321Z",
+          "display_at": "2026-03-02T08:43:57.000Z",
+          "affected_components": [
+            {
+              "code": "kgcsn9c73xzf",
+              "name": "Serverless Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "pdnc30nkdqth",
+              "name": "Edge Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "brpq5s19c26t",
+          "status": "identified",
+          "body": "We have rolled out mitigations and are seeing recovery. If you are still seeing build failures and are using Dubai (dxb1) as your primary Vercel Functions region, you can switch to another region as a workaround.",
+          "incident_id": "nt2llc4k0p41",
+          "created_at": "2026-03-02T06:24:47.116Z",
+          "updated_at": "2026-03-02T06:24:47.116Z",
+          "display_at": "2026-03-02T06:24:47.116Z",
+          "affected_components": [
+            {
+              "code": "kgcsn9c73xzf",
+              "name": "Serverless Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "pdnc30nkdqth",
+              "name": "Edge Functions",
+              "old_status": "degraded_performance",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "partial_outage",
+              "new_status": "degraded_performance"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        },
+        {
+          "id": "thlj7tjfqmsw",
+          "status": "identified",
+          "body": "Starting from 5:00 am UTC, we have started seeing failures to deploy and invoke functions in Dubai region (dxb1). Deployments with Middleware Functions are also impacted in all regions, because Middleware Functions are deployed globally for production deployments. Our team is actively investigating the issue.",
+          "incident_id": "nt2llc4k0p41",
+          "created_at": "2026-03-02T06:06:28.586Z",
+          "updated_at": "2026-03-02T10:40:14.153Z",
+          "display_at": "2026-03-02T06:06:28.000Z",
+          "affected_components": [
+            {
+              "code": "kgcsn9c73xzf",
+              "name": "Serverless Functions",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "1w4lc3s3q2pz",
+              "name": "Edge Middleware",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "pdnc30nkdqth",
+              "name": "Edge Functions",
+              "old_status": "operational",
+              "new_status": "degraded_performance"
+            },
+            {
+              "code": "7ckq6xr6nsbv",
+              "name": "Build & Deploy - Builds",
+              "old_status": "operational",
+              "new_status": "partial_outage"
+            }
+          ],
+          "deliver_notifications": true,
+          "custom_tweet": null,
+          "tweet_id": null
+        }
+      ],
+      "components": [
+        {
+          "id": "7ckq6xr6nsbv",
+          "name": "Builds",
+          "status": "operational",
+          "created_at": "2020-04-22T16:48:44.914Z",
+          "updated_at": "2026-03-25T17:31:26.462Z",
+          "position": 1,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": "47ltvgp4g9fb",
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        },
+        {
+          "id": "pdnc30nkdqth",
+          "name": "Edge Functions",
+          "status": "operational",
+          "created_at": "2023-02-17T10:28:47.618Z",
+          "updated_at": "2026-03-02T14:59:44.494Z",
+          "position": 11,
+          "description": null,
+          "showcase": true,
+          "start_date": "2023-02-17",
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        },
+        {
+          "id": "1w4lc3s3q2pz",
+          "name": "Edge Middleware",
+          "status": "operational",
+          "created_at": "2021-12-17T09:32:22.097Z",
+          "updated_at": "2026-03-06T21:38:34.809Z",
+          "position": 12,
+          "description": null,
+          "showcase": true,
+          "start_date": "2021-12-17",
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        },
+        {
+          "id": "kgcsn9c73xzf",
+          "name": "Serverless Functions",
+          "status": "operational",
+          "created_at": "2020-04-23T06:52:31.365Z",
+          "updated_at": "2026-03-02T14:59:44.517Z",
+          "position": 22,
+          "description": null,
+          "showcase": true,
+          "start_date": null,
+          "group_id": null,
+          "page_id": "lvglq8h0mdyh",
+          "group": false,
+          "only_show_if_degraded": false
+        }
+      ],
+      "reminder_intervals": null
+    }
+  ]
+}

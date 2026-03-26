@@ -1,12 +1,13 @@
 [
   {
-    "name": "Claude",
-    "type": "statuspage",
-    "url": "https://status.claude.com"
+    "preset": "claude"
   },
   {
-    "name": "OpenAI",
-    "url": "https://status.openai.com/feed.atom"
+    "preset": "openai"
+  },
+  {
+    "preset": "github-json",
+    "name": "GitHub Summary API"
   },
   {
     "name": "Example HTML Status",

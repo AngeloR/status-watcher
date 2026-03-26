@@ -11,8 +11,10 @@
 - Generic Atlassian Statuspage adapter for public `summary.json` and incident timelines
 - Configurable JSON/API adapter with nested field-path extraction for incidents and components
 - DOM-based HTML adapter with optional simple selectors for targeted status blocks
+- Built-in provider presets for common live status sources
 - Persistent per-service change history across refreshes and restarts
 - Structured component tracking, impacted-component counts, and component-aware detail view
+- Headless `inspect` command for parser and preset debugging
 - Retry/backoff plus last-known-good response caching for flaky sources
 - Adapter registry for future source types
 - Backward-compatible `feeds.json` config
@@ -63,6 +65,20 @@ You can also pass an explicit config path:
 status-watcher path/to/feeds.json
 ```
 
+List built-in presets:
+
+```bash
+status-watcher presets
+```
+
+Inspect one configured source without launching the TUI:
+
+```bash
+status-watcher inspect Claude
+status-watcher inspect OpenAI path/to/feeds.json
+status-watcher inspect --preset github-json --json
+```
+
 ### Config format
 
 Minimal feed entry:
@@ -108,9 +124,41 @@ Explicit source types:
 ]
 ```
 
+Preset-based config is shorter and easier to maintain:
+
+```json
+[
+  {
+    "preset": "claude"
+  },
+  {
+    "preset": "openai"
+  },
+  {
+    "preset": "github-json",
+    "name": "GitHub Summary API"
+  }
+]
+```
+
 `type` is optional and defaults to `feed`.
 
 Statuspage sources also accept `recent_incidents` to control how much recent incident history is pulled from `incidents.json`.
+
+### Presets
+
+Presets provide default `name`, `type`, `url`, and adapter options. You can still override any of those fields in `feeds.json`.
+
+Current built-ins:
+
+- `claude`
+- `claude-html`
+- `openai`
+- `github`
+- `github-json`
+- `cloudflare`
+- `vercel`
+- `linear`
 
 ### JSON source options
 
@@ -163,6 +211,13 @@ Refresh the captured provider fixtures used by golden tests:
 python3 scripts/refresh_provider_fixtures.py
 ```
 
+Try a preset or config entry headlessly:
+
+```bash
+python3 -m status_watcher inspect --preset claude
+python3 -m status_watcher inspect GitHub feeds.json
+```
+
 ## Releases
 
 This repository uses conventional commits via PR titles and Release Please for automated release PRs.
@@ -176,6 +231,7 @@ This repository uses conventional commits via PR titles and Release Please for a
 
 - Headless watch mode and alert delivery
 - More provider presets built on top of the JSON/HTML adapters
+- Broader real-provider fixture coverage across more status vendors
 - Better screenshots/demo assets for the README
 
 ## Limitations
