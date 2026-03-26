@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Sequence
 from urllib.parse import urljoin
 
 from status_watcher.domain import normalize_component_status, parse_date
@@ -215,6 +215,18 @@ def first_descendant(node: HtmlNode, tags: set[str]) -> Optional[HtmlNode]:
     return None
 
 
+def first_descendant_with_class(node: HtmlNode, class_names: Sequence[str]) -> Optional[HtmlNode]:
+    candidates = list(iter_nodes(node))
+    for class_name in class_names:
+        for candidate in candidates:
+            candidate_classes = set(candidate.attrs.get("class", "").split())
+            if class_name in candidate_classes:
+                text = node_text(candidate)
+                if text:
+                    return candidate
+    return None
+
+
 def first_time(node: HtmlNode) -> Optional[str]:
     for candidate in iter_nodes(node):
         if candidate.tag == "time":
@@ -264,8 +276,10 @@ def entry_from_node(node: HtmlNode, base_url: str) -> Optional[FeedEntry]:
     text = node_text(node)
     if not text:
         return None
-    heading = first_descendant(node, HEADING_TAGS)
-    title = node_text(heading) if heading is not None else ""
+    title_node = first_descendant_with_class(node, ["actual-title", "update-title", "incident-title"])
+    if title_node is None:
+        title_node = first_descendant(node, HEADING_TAGS)
+    title = node_text(title_node) if title_node is not None else ""
     if not title:
         title = text.split(".", 1)[0][:96].strip() or "Status update"
 
@@ -285,9 +299,16 @@ def component_from_node(node: HtmlNode, base_url: str) -> Optional[ComponentSnap
     text = node_text(node)
     if not text:
         return None
-    heading = first_descendant(node, HEADING_TAGS)
-    name = node_text(heading) if heading is not None else text.split("-", 1)[0][:80].strip()
-    raw_status = node.attrs.get("data-status") or node.attrs.get("aria-label") or text
+    name_node = first_descendant_with_class(node, ["name"])
+    if name_node is None:
+        name_node = first_descendant(node, HEADING_TAGS)
+    name = node_text(name_node) if name_node is not None else text.split("-", 1)[0][:80].strip()
+    raw_status = (
+        node.attrs.get("data-component-status")
+        or node.attrs.get("data-status")
+        or node.attrs.get("aria-label")
+        or text
+    )
     status, label = normalize_component_status(raw_status)
     if not name or status == "unknown":
         return None

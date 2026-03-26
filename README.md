@@ -157,6 +157,12 @@ pip install -e .
 python3 -m unittest discover -s tests
 ```
 
+Refresh the captured provider fixtures used by golden tests:
+
+```bash
+python3 scripts/refresh_provider_fixtures.py
+```
+
 ## Releases
 
 This repository uses conventional commits via PR titles and Release Please for automated release PRs.

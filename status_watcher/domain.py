@@ -80,6 +80,9 @@ STATE_PREFIX_RE = re.compile(
     re.IGNORECASE,
 )
 STATE_SUFFIX_RE = re.compile(r"\b(resolved|completed|restored|recovered|operational)\b$", re.IGNORECASE)
+ACTIVE_PREFIX_RE = re.compile(r"^(investigating|identified|monitoring|in progress|verifying)\b", re.IGNORECASE)
+RESOLVED_PREFIX_RE = re.compile(r"^(resolved|completed|restored|recovered|operational)\b", re.IGNORECASE)
+FUTURE_RESOLUTION_RE = re.compile(r"\b(can|may|might|could)\s+be\s+resolved\b", re.IGNORECASE)
 INCIDENT_NOISE_PATTERNS = [
     re.compile(r"\bwe are experiencing (?:an )?issue with\b", re.IGNORECASE),
     re.compile(r"\bwe are aware of (?:an )?issue with\b", re.IGNORECASE),
@@ -200,19 +203,26 @@ def classify_entry(entry: FeedEntry) -> Dict[str, Any]:
     title = strip_html(entry.title)
     summary = strip_html(entry.summary)
     combined = f"{title} {summary}".lower()
+    title_lower = title.lower()
 
-    resolved = contains_any(combined, RESOLVED_TERMS)
-    active = contains_any(combined, ACTIVE_TERMS)
-    degraded = contains_any(combined, DEGRADED_TERMS)
-
-    if resolved:
+    if RESOLVED_PREFIX_RE.match(title_lower):
         state = "resolved"
-    elif active:
+    elif ACTIVE_PREFIX_RE.match(title_lower):
         state = "issue"
-    elif degraded:
-        state = "degraded"
     else:
-        state = "unknown"
+        resolution_text = FUTURE_RESOLUTION_RE.sub(" ", combined)
+        resolved = contains_any(resolution_text, RESOLVED_TERMS)
+        active = contains_any(combined, ACTIVE_TERMS)
+        degraded = contains_any(combined, DEGRADED_TERMS)
+
+        if resolved:
+            state = "resolved"
+        elif active:
+            state = "issue"
+        elif degraded:
+            state = "degraded"
+        else:
+            state = "unknown"
 
     return {
         "state": state,

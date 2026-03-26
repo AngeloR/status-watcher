@@ -53,6 +53,32 @@ class HtmlSourceAdapterTests(unittest.TestCase):
         self.assertEqual(snapshot.components[0].status, "degraded")
         self.assertEqual(snapshot.components[0].label, "Partial outage")
 
+    def test_html_adapter_prefers_specific_title_class_over_wrapper_text(self) -> None:
+        spec = SourceSpec(
+            name="Example HTML",
+            type="html",
+            url="https://status.example.com",
+            options={"selectors": [".incident"]},
+        )
+        payload = b"""
+        <html>
+          <body>
+            <section class='incident'>
+              <div class='incident-title'>
+                <a class='actual-title' href='/incidents/cowork'>Elevated connection reset errors in Cowork</a>
+                <a class='subscribe' href='/subscribe'>Subscribe</a>
+              </div>
+              <div class='updates'>We are currently investigating this issue.</div>
+            </section>
+          </body>
+        </html>
+        """
+
+        with patch("status_watcher.sources.html_page.fetch_url", return_value=payload):
+            snapshot = HtmlSourceAdapter().load(spec)
+
+        self.assertEqual(snapshot.entries[0].title, "Elevated connection reset errors in Cowork")
+
 
 if __name__ == "__main__":
     unittest.main()

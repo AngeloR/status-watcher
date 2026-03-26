@@ -31,6 +31,17 @@ class DomainTests(unittest.TestCase):
 
         self.assertEqual(classified["state"], "resolved")
 
+    def test_active_title_wins_when_summary_mentions_possible_resolution(self) -> None:
+        entry = FeedEntry(
+            title="Investigating - Elevated connection reset errors in Cowork",
+            summary="This issue can be resolved by restarting the Claude Desktop application.",
+            updated=None,
+        )
+
+        classified = classify_entry(entry)
+
+        self.assertEqual(classified["state"], "issue")
+
     def test_infer_service_status_keeps_multiple_live_incidents(self) -> None:
         now = dt.datetime(2026, 3, 25, 14, 33, tzinfo=dt.timezone.utc)
         entries = [
