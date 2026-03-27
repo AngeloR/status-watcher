@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.3.0](https://github.com/AngeloR/status-watcher/compare/status-watcher-v0.2.0...status-watcher-v0.3.0) (2026-03-27)
+
+
+### Features
+
+* **cli:** add presets, inspect, and provider fixtures ([f0f73ab](https://github.com/AngeloR/status-watcher/commit/f0f73ab47734cc7e0874145ea1239b28858d0d52))
+* **cli:** add source discovery and config bootstrap ([288a2cc](https://github.com/AngeloR/status-watcher/commit/288a2ccdcb1c4919832fde319c9d992db3ba1b1a))
+* **config:** add azure and cloudflare core services ([065174a](https://github.com/AngeloR/status-watcher/commit/065174a8ca2196e79d1b4fd2cbf7f00f834f18d8))
+* **history:** persist service change log ([d794545](https://github.com/AngeloR/status-watcher/commit/d79454539ec0c9a8194c2f0e71ff6324018b2465))
+* **sources:** add fetch retries and cache fallback ([be10623](https://github.com/AngeloR/status-watcher/commit/be10623a3719c23913aee7af67a971ba2bad7d4f))
+* **sources:** add json sources and component drilldown ([abb54be](https://github.com/AngeloR/status-watcher/commit/abb54bee15f3d58255a9d3b4b14b27cdf6aa3f97))
+* **sources:** add statuspage adapter ([4031a70](https://github.com/AngeloR/status-watcher/commit/4031a701ceb7d0e0e1ef31dd25d9f6117f938edb))
+
+
+### Bug Fixes
+
+* **azure:** switch preset to html status page ([f082e2a](https://github.com/AngeloR/status-watcher/commit/f082e2aafdc8aee944cfca5d8efd1b77b2a48d4c))
+* **domain:** surface multiple live incidents ([47090d2](https://github.com/AngeloR/status-watcher/commit/47090d2ba50a282dfd13bebf0ee18cb063a1513b))
+
 ## [0.2.0](https://github.com/AngeloR/status-watcher/compare/status-watcher-v0.1.0...status-watcher-v0.2.0) (2026-03-11)
 
 
